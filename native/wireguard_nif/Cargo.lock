@@ -12,29 +12,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "anyhow"
+version = "1.0.57"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "08f9b8508dccb7687a1d6c4ce66b2b0ecef467c94667de27d8d7fe1f8d2a9cdc"
+
+[[package]]
 name = "base64"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "904dfeac50f3cdaba28fc6f57fdcddb75f49ed61346676a78c4ffe55877802fd"
-
-[[package]]
-name = "bindgen"
-version = "0.59.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2bd2a9a458e8f4304c52c43ebb0cfbd520289f8379a52e329a38afda99bf8eb8"
-dependencies = [
- "bitflags",
- "cexpr",
- "clang-sys",
- "lazy_static",
- "lazycell",
- "peeking_take_while",
- "proc-macro2",
- "quote",
- "regex",
- "rustc-hash",
- "shlex",
-]
 
 [[package]]
 name = "bitflags"
@@ -49,35 +36,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "14c189c53d098945499cdfa7ecc63567cf3886b3332b312a5b4585d8d3a6a610"
 
 [[package]]
-name = "cc"
-version = "1.0.73"
+name = "bytes"
+version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2fff2a6927b3bb87f9595d67196a70493f627687a71d87a0d692242c33f58c11"
-
-[[package]]
-name = "cexpr"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6fac387a98bb7c37292057cffc56d62ecb629900026402633ae9160df93a8766"
-dependencies = [
- "nom",
-]
+checksum = "c4872d67bab6358e59559027aa3b9157c53d9358c51423c17554809a8858e0f8"
 
 [[package]]
 name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
-
-[[package]]
-name = "clang-sys"
-version = "1.3.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bf6b561dcf059c85bbe388e0a7b0a1469acb3934cc0cfa148613a830629e3049"
-dependencies = [
- "glob",
- "libc",
-]
 
 [[package]]
 name = "crypto-common"
@@ -133,12 +101,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "glob"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9b919933a397b79c37e33b77bb2aa3dc8eb6e165ad809e58ff75bc7db2e34574"
-
-[[package]]
 name = "heck"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -157,16 +119,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
-name = "lazycell"
-version = "1.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "830d08ce1d1d941e6b30645f1a0eb5643013d835ce3779a5fc208261dbe10f55"
-
-[[package]]
 name = "libc"
 version = "0.2.126"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "349d5a591cd28b49e1d1037471617a32ddcda5731b99419008085f72d5a53836"
+
+[[package]]
+name = "log"
+version = "0.4.17"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "abb12e687cfb44aa40f41fc3978ef76448f9b6038cad6aef4259d3c095a2382e"
+dependencies = [
+ "cfg-if",
+]
 
 [[package]]
 name = "memchr"
@@ -175,26 +140,97 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2dffe52ecf27772e601905b7522cb4ef790d2cc203488bbd0e2fe85fcb74566d"
 
 [[package]]
-name = "minimal-lexical"
-version = "0.2.1"
+name = "netlink-packet-core"
+version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "68354c5c6bd36d73ff3feceb05efa59b6acb7626617f4962be322a825e61f79a"
-
-[[package]]
-name = "nom"
-version = "7.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a8903e5a29a317527874d0402f867152a3d21c908bb0b933e416c65e301d4c36"
+checksum = "345b8ab5bd4e71a2986663e88c56856699d060e78e152e6e9d7966fcd5491297"
 dependencies = [
- "memchr",
- "minimal-lexical",
+ "anyhow",
+ "byteorder",
+ "libc",
+ "netlink-packet-utils",
 ]
 
 [[package]]
-name = "peeking_take_while"
-version = "0.1.2"
+name = "netlink-packet-generic"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "19b17cddbe7ec3f8bc800887bab5e717348c95ea2ca0b1bf0837fb964dc67099"
+checksum = "8678ffbbfef3dd88acbe85ed31d32f0de0a100854ee7d47fe5b250f81857a23b"
+dependencies = [
+ "anyhow",
+ "byteorder",
+ "libc",
+ "netlink-packet-core",
+ "netlink-packet-utils",
+]
+
+[[package]]
+name = "netlink-packet-route"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "733ea73609acfd7fa7ddadfb7bf709b0471668c456ad9513685af543a06342b2"
+dependencies = [
+ "anyhow",
+ "bitflags",
+ "byteorder",
+ "libc",
+ "netlink-packet-core",
+ "netlink-packet-utils",
+]
+
+[[package]]
+name = "netlink-packet-utils"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "25af9cf0dc55498b7bd94a1508af7a78706aa0ab715a73c5169273e03c84845e"
+dependencies = [
+ "anyhow",
+ "byteorder",
+ "paste",
+ "thiserror",
+]
+
+[[package]]
+name = "netlink-packet-wireguard"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ebc4ffa5ccfab369b38b5aed9dabe51b62b39bc9c80de7bd1213c5a8cdae03c4"
+dependencies = [
+ "anyhow",
+ "byteorder",
+ "libc",
+ "log",
+ "netlink-packet-generic",
+ "netlink-packet-utils",
+]
+
+[[package]]
+name = "netlink-request"
+version = "1.5.4"
+source = "git+https://github.com/tonarino/innernet?rev=a6c918a581bc66824ca29e6c84be902f995d9726#a6c918a581bc66824ca29e6c84be902f995d9726"
+dependencies = [
+ "netlink-packet-core",
+ "netlink-packet-generic",
+ "netlink-packet-route",
+ "netlink-sys",
+]
+
+[[package]]
+name = "netlink-sys"
+version = "0.8.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3e4c9f9547a08241bee7b6558b9b98e1f290d187de8b7cfca2bbb4937bcaa8f8"
+dependencies = [
+ "bytes",
+ "libc",
+ "log",
+]
+
+[[package]]
+name = "paste"
+version = "1.0.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0c520e05135d6e763148b6426a837e239041653ba7becd2e538c076c738025fc"
 
 [[package]]
 name = "proc-macro2"
@@ -241,12 +277,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "49b3de9ec5dc0a3417da371aab17d729997c15010e7fd24ff707773a33bddb64"
 
 [[package]]
-name = "rustc-hash"
-version = "1.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "08d43f7aa6b08d49f382cde6a7982047c3426db949b1424bc4b7ec9ae12c6ce2"
-
-[[package]]
 name = "rustler"
 version = "0.25.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -280,12 +310,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "shlex"
-version = "1.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "43b2853a4d09f215c24cc5489c992ce46052d359b5109343cbafbf26bc62f8a3"
-
-[[package]]
 name = "subtle"
 version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -300,6 +324,26 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
+]
+
+[[package]]
+name = "thiserror"
+version = "1.0.31"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bd829fe32373d27f76265620b5309d0340cb8550f523c1dda251d6298069069a"
+dependencies = [
+ "thiserror-impl",
+]
+
+[[package]]
+name = "thiserror-impl"
+version = "1.0.31"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0396bc89e626244658bef819e22d0cc459e795a5ebe878e6ec336d1674a8d79a"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
@@ -343,27 +387,21 @@ checksum = "fd6fbd9a79829dd1ad0cc20627bf1ed606756a7f77edff7b66b7064f9cb327c6"
 
 [[package]]
 name = "wireguard-control"
-version = "1.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4be2feb154b46e4dee6090ce48f2c20e720d1f1f084324bb952875bd36256b0d"
+version = "1.5.4"
+source = "git+https://github.com/tonarino/innernet?rev=a6c918a581bc66824ca29e6c84be902f995d9726#a6c918a581bc66824ca29e6c84be902f995d9726"
 dependencies = [
  "base64",
  "curve25519-dalek",
  "hex",
  "libc",
+ "log",
+ "netlink-packet-core",
+ "netlink-packet-generic",
+ "netlink-packet-route",
+ "netlink-packet-wireguard",
+ "netlink-request",
+ "netlink-sys",
  "rand_core",
- "wireguard-control-sys",
-]
-
-[[package]]
-name = "wireguard-control-sys"
-version = "1.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a29e2fd0f0f753c47ebb7f50d89873d14163cc7867106ab8c2551b9d15646837"
-dependencies = [
- "bindgen",
- "cc",
- "libc",
 ]
 
 [[package]]
