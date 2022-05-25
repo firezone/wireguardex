@@ -1,0 +1,43 @@
+defmodule WireguardEx.MixProject do
+  use Mix.Project
+
+  @source_url "https://github.com/firezone/wireguardex"
+  @version "0.0.0"
+
+  def project do
+    [
+      app: :wireguardex,
+      version: @version,
+      elixir: "~> 1.13",
+      start_permanent: Mix.env() == :prod,
+      name: "wireguardex",
+      package: package(),
+      deps: deps()
+    ]
+  end
+
+  # Run "mix help compile.app" to learn about applications.
+  def application do
+    [
+      extra_applications: [:logger]
+    ]
+  end
+
+  # Run "mix help deps" to learn about dependencies.
+  defp deps do
+    [
+      {:rustler_precompiled, "~> 0.5.1"},
+      {:rustler, "~> 0.25.0", optional: true}
+    ]
+  end
+
+  defp package do
+    [
+      description: "Native wireguard library implemented in Rust",
+      maintainers: ["Andrew Rousset <andrew@firezone.dev>"],
+      licenses: ["Apache 2.0"],
+      files: ~w(lib native .formatter.exs README* LICENSE* mix.ecs checksums-*.exs),
+      links: %{"GitHub" => @source_url}
+    ]
+  end
+end
