@@ -1,0 +1,64 @@
+---
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+      - release/*
+    pull_request:
+      branches:
+        - main
+
+jobs:
+  tests:
+    env:
+      MIX_ENV: test
+      WIREGUARDEX_BUILD: true
+    runs-on: ubuntu-latest
+    name: "[${{matrix.otp}}/${{matrix.elixir}}] Tests on wireguard_nif [OTP/Elixir]"
+    strategy:
+      fail-fast: false
+      matrix:
+        otp: [22.3, 24.3, 25.0]
+        elixir: [1.11.4, 1.12.3, 1.13.4]
+        exclude:
+          - otp: 25
+            elixir: 1.11.4
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: 11.1
+          directory: ${{ runner.temp }}/llvm-11.1
+
+      - name: Cache hex deps
+        id: mix-cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            deps
+            _build
+            !_build/*/lib/wireguardex
+          key: ${{ runner.os }}[${{ matrix.otp }}/${{ matrix.elixir }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+
+        # Run tests
+      - name: Run tests
+        env:
+          RUST_BACKTRACE: 1
+        run: |
+          mix deps.get
+          mix deps.compile
+          mix compile --warnings-as-errors
+          mix test

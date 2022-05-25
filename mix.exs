@@ -2,17 +2,19 @@ defmodule WireguardEx.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/firezone/wireguardex"
-  @version "0.0.0"
+  @version "0.1.0"
 
   def project do
     [
       app: :wireguardex,
       version: @version,
-      elixir: "~> 1.13",
+      elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
+      compilers: Mix.compilers(),
       name: "wireguardex",
       package: package(),
-      deps: deps()
+      deps: deps(),
+      aliases: aliases()
     ]
   end
 
@@ -27,7 +29,7 @@ defmodule WireguardEx.MixProject do
   defp deps do
     [
       {:rustler_precompiled, "~> 0.5.1"},
-      {:rustler, "~> 0.25.0", optional: true}
+      {:rustler, ">= 0.0.0", optional: true}
     ]
   end
 
@@ -38,6 +40,13 @@ defmodule WireguardEx.MixProject do
       licenses: ["Apache 2.0"],
       files: ~w(lib native .formatter.exs README* LICENSE* mix.ecs checksums-*.exs),
       links: %{"GitHub" => @source_url}
+    ]
+  end
+
+  defp aliases do
+    [
+      # force NIF compilation for tests
+      test: [fn _ -> System.put_env("WIREGUARDEX_BUILD", "true") end, "test"]
     ]
   end
 end
