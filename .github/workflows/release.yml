@@ -26,19 +26,19 @@ jobs:
               target: aarch64-unknown-linux-gnu,
               os: ubuntu-20.04,
               nif: "2.16",
-              use-cross: true
+              use-cross: false
             }
           - {
               target: aarch64-unknown-linux-gnu,
               os: ubuntu-20.04,
               nif: "2.15",
-              use-cross: true
+              use-cross: false
             }
           - {
               target: aarch64-unknown-linux-gnu,
               os: ubuntu-20.04,
               nif: "2.14",
-              use-cross: true
+              use-cross: false
             }
           - { target: x86_64-unknown-linux-gnu, os: ubuntu-20.04, nif: "2.16" }
           - { target: x86_64-unknown-linux-gnu, os: ubuntu-20.04, nif: "2.15" }
