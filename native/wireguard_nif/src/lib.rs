@@ -1,13 +1,13 @@
-//! NIF implementations for wireguard
+//! nif bindings for wireguard
 
-use std::collections::HashMap;
+mod device;
+mod error;
+mod key;
+mod peer;
 
-use rustler::Term;
+use device::{delete_device, get_device, list_devices};
 
-#[rustler::nif]
-fn set(_config: HashMap<Term, &str>, _iname: &str) {}
-
-#[rustler::nif]
-fn show(_subcommand: &str, _iname: &str) {}
-
-rustler::init!("Elixir.WireguardEx", [set, show]);
+rustler::init!(
+    "Elixir.WireguardEx",
+    [list_devices, get_device, delete_device]
+);

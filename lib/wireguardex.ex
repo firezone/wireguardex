@@ -10,11 +10,12 @@ defmodule WireguardEx do
     otp_app: :wireguardex,
     crate: "wireguard_nif",
     base_url: "#{github_url}/releases/download/v#{version}",
-    force_build: System.get_env("WIREGUARDEX_BUILD") in ["1", "true"],
+    force_build: System.get_env("WIREGUARDNIF_BUILD") in ["1", "true"],
     version: version
 
-  def set(_config, _iname), do: error()
-  def show(_subcommand, _iname), do: error()
+  def list_devices(), do: error()
+  def get_device(_name), do: error()
+  def delete_device(_name), do: error()
 
   defp error, do: :erlang.nif_error(:nif_not_loaded)
 end

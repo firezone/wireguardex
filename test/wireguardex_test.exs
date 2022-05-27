@@ -2,7 +2,7 @@ defmodule WireguardExTest do
   use ExUnit.Case
   doctest WireguardEx
 
-  test "WireguardEx NIF loaded" do
-    WireguardEx.set(%{}, "")
+  test "NIFs loaded" do
+    WireguardEx.list_devices()
   end
 end
