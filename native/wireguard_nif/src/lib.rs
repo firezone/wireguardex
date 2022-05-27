@@ -5,7 +5,7 @@ mod error;
 mod key;
 mod peer;
 
-use device::{delete_device, get_device, set_device, list_devices};
+use device::{list_devices, get_device, set_device, delete_device};
 
 rustler::init!(
     "Elixir.WireguardEx",

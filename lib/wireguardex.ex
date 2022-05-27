@@ -15,6 +15,7 @@ defmodule WireguardEx do
 
   def list_devices(), do: error()
   def get_device(_name), do: error()
+  def set_device(_name, _device_config), do: error()
   def delete_device(_name), do: error()
 
   defp error, do: :erlang.nif_error(:nif_not_loaded)
