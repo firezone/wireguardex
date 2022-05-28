@@ -1,7 +1,7 @@
 //! nif bindings for wireguard peers
 
 use rustler::NifStruct;
-use std::time::{SystemTime, UNIX_EPOCH};
+// use std::time::{SystemTime, UNIX_EPOCH};
 use wireguard_control::{AllowedIp, Key, PeerConfig, PeerConfigBuilder, PeerInfo, PeerStats};
 
 #[derive(NifStruct)]
@@ -87,7 +87,7 @@ struct NifPeerStats {
 impl From<PeerStats> for NifPeerStats {
     fn from(stats: PeerStats) -> Self {
         Self {
-            last_handshake_time: stats.last_handshake_time.map(|t| {
+            last_handshake_time: stats.last_handshake_time.map(|_t| {
                 // TODO maybe convert the SystemTime object using UNIX_EPOCH to a u64
                 0
             }),

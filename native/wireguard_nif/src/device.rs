@@ -103,3 +103,12 @@ fn delete_device(name: &str) {
 
     device.delete().unwrap();
 }
+
+#[rustler::nif]
+fn remove_peer(name: &str, public_key: &str) {
+    let key = Key::from_base64(public_key).unwrap();
+    let device = DeviceUpdate::new()
+        .remove_peer_by_key(&key);
+
+    device.apply(&name.parse().unwrap(), BACKEND).unwrap();
+}
