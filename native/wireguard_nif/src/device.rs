@@ -1,8 +1,9 @@
 //! nif bindings for wireguard devices
 
-use rustler::NifStruct;
-use wireguard_control::{Backend, Device, DeviceUpdate, Key, PeerConfigBuilder};
+use rustler::{Error, NifResult, NifStruct};
+use wireguard_control::{Backend, Device, DeviceUpdate, InterfaceName, Key, PeerConfigBuilder};
 
+use crate::key;
 use crate::peer::{NifPeerConfig, NifPeerInfo};
 
 #[cfg(target_os = "linux")]
@@ -36,6 +37,39 @@ impl From<Device> for NifDevice {
     }
 }
 
+impl From<NifDeviceConfig> for DeviceUpdate {
+    fn from(config: NifDeviceConfig) -> Self {
+        let mut device = DeviceUpdate::new();
+        let public_key = config.public_key;
+        let private_key = config.private_key;
+        let fwmark = config.fwmark;
+        let listen_port = config.listen_port;
+        let peers = config
+            .peers
+            .into_iter()
+            .map(|c| c.into())
+            .collect::<Vec<PeerConfigBuilder>>();
+
+        if let Some(public_key) = public_key {
+            device = device.set_public_key(Key::from_base64(&public_key).unwrap());
+        }
+        if let Some(private_key) = private_key {
+            device = device.set_private_key(Key::from_base64(&private_key).unwrap());
+        }
+        if let Some(fwmark) = fwmark {
+            device = device.set_fwmark(fwmark);
+        }
+        if let Some(listen_port) = listen_port {
+            device = device.set_listen_port(listen_port);
+        }
+        if config.replace_peers {
+            device = device.replace_peers();
+        }
+
+        device.add_peers(&peers)
+    }
+}
+
 #[derive(NifStruct)]
 #[module = "Elixir.WireguardEx.DeviceConfig"]
 struct NifDeviceConfig {
@@ -57,58 +91,49 @@ fn list_devices() -> Vec<String> {
 }
 
 #[rustler::nif]
-fn get_device(name: &str) -> NifDevice {
-    let device = Device::get(&name.parse().unwrap(), BACKEND).unwrap();
+fn get_device(name: &str) -> NifResult<NifDevice> {
+    let iname = parse_iname(name)?;
+    let device = Device::get(&iname, BACKEND).unwrap();
 
-    device.into()
+    Ok(device.into())
 }
 
 #[rustler::nif]
-fn set_device(name: &str, config: NifDeviceConfig) {
-    let mut device = DeviceUpdate::new();
-    let public_key = config.public_key;
-    let private_key = config.private_key;
-    let fwmark = config.fwmark;
-    let listen_port = config.listen_port;
-    let peers = config
-        .peers
-        .into_iter()
-        .map(|c| c.into())
-        .collect::<Vec<PeerConfigBuilder>>();
+fn set_device(name: &str, config: NifDeviceConfig) -> NifResult<()> {
+    let iname = parse_iname(name)?;
+    let device: DeviceUpdate = config.into();
 
-    if let Some(public_key) = public_key {
-        device = device.set_public_key(Key::from_base64(&public_key).unwrap());
-    }
-    if let Some(private_key) = private_key {
-        device = device.set_private_key(Key::from_base64(&private_key).unwrap());
-    }
-    if let Some(fwmark) = fwmark {
-        device = device.set_fwmark(fwmark);
-    }
-    if let Some(listen_port) = listen_port {
-        device = device.set_listen_port(listen_port);
-    }
-    if config.replace_peers {
-        device = device.replace_peers();
-    }
+    device.apply(&iname, BACKEND).unwrap();
 
-    device = device.add_peers(&peers);
-
-    device.apply(&name.parse().unwrap(), BACKEND).unwrap();
+    Ok(())
 }
 
 #[rustler::nif]
-fn delete_device(name: &str) {
-    let device = Device::get(&name.parse().unwrap(), BACKEND).unwrap();
+fn delete_device(name: &str) -> NifResult<()> {
+    let iname = parse_iname(name)?;
+    let device = Device::get(&iname, BACKEND).unwrap();
 
     device.delete().unwrap();
+
+    Ok(())
 }
 
 #[rustler::nif]
-fn remove_peer(name: &str, public_key: &str) {
-    let key = Key::from_base64(public_key).unwrap();
-    let device = DeviceUpdate::new()
-        .remove_peer_by_key(&key);
+fn remove_peer(name: &str, public_key: &str) -> NifResult<()> {
+    let iname = parse_iname(name)?;
+    let key = key::from_base64(public_key)?;
+    let device = DeviceUpdate::new().remove_peer_by_key(&key);
 
-    device.apply(&name.parse().unwrap(), BACKEND).unwrap();
+    device.apply(&iname, BACKEND).unwrap();
+
+    Ok(())
+}
+
+fn parse_iname(name: &str) -> NifResult<InterfaceName> {
+    // Parse an interface name string into a valid InterfaceName struct.
+    // Log an error with the name if it fails and map to a rustler error.
+    name.parse().map_err(|_e| {
+        eprintln!("[Error] Invalid interface name: {0}", name);
+        Error::BadArg
+    })
 }

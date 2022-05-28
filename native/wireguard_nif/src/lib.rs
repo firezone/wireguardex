@@ -1,13 +1,18 @@
 //! nif bindings for wireguard
 
 mod device;
-mod error;
 mod key;
 mod peer;
 
-use device::{list_devices, get_device, set_device, delete_device, remove_peer};
+use device::{delete_device, get_device, list_devices, remove_peer, set_device};
 
 rustler::init!(
     "Elixir.WireguardEx",
-    [list_devices, get_device, set_device, delete_device, remove_peer]
+    [
+        list_devices,
+        get_device,
+        set_device,
+        delete_device,
+        remove_peer,
+    ]
 );
