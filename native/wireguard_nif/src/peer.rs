@@ -1,8 +1,13 @@
 //! nif bindings for wireguard peers
 
-use rustler::NifStruct;
-// use std::time::{SystemTime, UNIX_EPOCH};
-use wireguard_control::{AllowedIp, Key, PeerConfig, PeerConfigBuilder, PeerInfo, PeerStats};
+use std::convert::TryFrom;
+use std::net::AddrParseError;
+use std::time::SystemTime;
+
+use rustler::{Error, NifResult, NifStruct};
+use wireguard_control::{AllowedIp, PeerConfig, PeerConfigBuilder, PeerInfo, PeerStats};
+
+use crate::key;
 
 #[derive(NifStruct)]
 #[module = "Elixir.WireguardEx.PeerConfig"]
@@ -24,31 +29,44 @@ impl From<PeerConfig> for NifPeerConfig {
             allowed_ips: config
                 .allowed_ips
                 .iter()
+                // wireguard_control has a string via a Debug trait for the
+                // AllowedIp struct that formats the allowed ip with its
+                // cidr subnet mask
                 .map(|ip| format!("{:?}", ip))
                 .collect(),
         }
     }
 }
 
-impl From<NifPeerConfig> for PeerConfigBuilder {
-    fn from(nif_config: NifPeerConfig) -> Self {
-        let public_key = Key::from_base64(&nif_config.public_key).unwrap();
+impl TryFrom<NifPeerConfig> for PeerConfigBuilder {
+    type Error = Error;
+
+    fn try_from(nif_config: NifPeerConfig) -> NifResult<Self> {
+        let public_key = key::from_base64(&nif_config.public_key)?;
         let preshared_key = nif_config.preshared_key;
         let endpoint = nif_config.endpoint;
         let persistent_keepalive_interval = nif_config.persistent_keepalive_interval;
         let allowed_ips = nif_config
             .allowed_ips
             .iter()
-            .map(|ip| ip.parse().unwrap())
-            .collect::<Vec<AllowedIp>>();
+            .map(|ip| {
+                ip.parse().map_err(|_| {
+                    Error::Term(Box::new(format!("Allowed ip failed to parse: {0}", ip)))
+                })
+            })
+            .collect::<NifResult<Vec<AllowedIp>>>()?;
 
         let mut config = PeerConfigBuilder::new(&public_key);
 
         if let Some(preshared_key) = preshared_key {
-            config = config.set_preshared_key(Key::from_base64(&preshared_key).unwrap());
+            config = config.set_preshared_key(key::from_base64(&preshared_key)?);
         }
         if let Some(endpoint) = endpoint {
-            config = config.set_endpoint(endpoint.parse().unwrap());
+            config = config.set_endpoint(
+                endpoint
+                    .parse()
+                    .map_err(|e: AddrParseError| Error::Term(Box::new(e.to_string())))?,
+            );
         }
         if let Some(persistent_keepalive_interval) = persistent_keepalive_interval {
             config = config.set_persistent_keepalive_interval(persistent_keepalive_interval);
@@ -56,7 +74,7 @@ impl From<NifPeerConfig> for PeerConfigBuilder {
 
         config = config.add_allowed_ips(&allowed_ips);
 
-        config
+        Ok(config)
     }
 }
 
@@ -86,11 +104,17 @@ struct NifPeerStats {
 
 impl From<PeerStats> for NifPeerStats {
     fn from(stats: PeerStats) -> Self {
+        let last_handshake_time =
+            stats
+                .last_handshake_time
+                .map(|t| match t.duration_since(SystemTime::UNIX_EPOCH) {
+                    Ok(d) => d.as_secs(),
+                    // This should be very very rare if it's even possible.
+                    Err(_) => panic!("Last handshake time was before UNIX_EPOCH"),
+                });
+
         Self {
-            last_handshake_time: stats.last_handshake_time.map(|_t| {
-                // TODO maybe convert the SystemTime object using UNIX_EPOCH to a u64
-                0
-            }),
+            last_handshake_time,
             rx_bytes: stats.rx_bytes,
             tx_bytes: stats.tx_bytes,
         }
