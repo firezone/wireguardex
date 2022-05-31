@@ -2,7 +2,7 @@
 
 use std::convert::{TryFrom, TryInto};
 
-use rustler::{Error, NifResult, NifStruct};
+use rustler::{types::atom, Atom, Error, NifResult, NifStruct};
 use wireguard_control::{
     Backend, Device, DeviceUpdate, InterfaceName, InvalidInterfaceName, PeerConfigBuilder,
 };
@@ -105,7 +105,7 @@ fn get_device(name: &str) -> NifResult<NifDevice> {
 }
 
 #[rustler::nif]
-fn set_device(name: &str, config: NifDeviceConfig) -> NifResult<()> {
+fn set_device(name: &str, config: NifDeviceConfig) -> NifResult<Atom> {
     let iname = parse_iname(name)?;
     let device: DeviceUpdate = config.try_into()?;
 
@@ -113,11 +113,11 @@ fn set_device(name: &str, config: NifDeviceConfig) -> NifResult<()> {
         .apply(&iname, BACKEND)
         .map_err(|e| Error::Term(Box::new(e.to_string())))?;
 
-    Ok(())
+    Ok(atom::ok())
 }
 
 #[rustler::nif]
-fn delete_device(name: &str) -> NifResult<()> {
+fn delete_device(name: &str) -> NifResult<Atom> {
     let iname = parse_iname(name)?;
     let device = Device::get(&iname, BACKEND).map_err(|e| Error::Term(Box::new(e.to_string())))?;
 
@@ -125,11 +125,11 @@ fn delete_device(name: &str) -> NifResult<()> {
         .delete()
         .map_err(|e| Error::Term(Box::new(e.to_string())))?;
 
-    Ok(())
+    Ok(atom::ok())
 }
 
 #[rustler::nif]
-fn remove_peer(name: &str, public_key: &str) -> NifResult<()> {
+fn remove_peer(name: &str, public_key: &str) -> NifResult<Atom> {
     let iname = parse_iname(name)?;
     let key = key::from_base64(public_key)?;
     let device = DeviceUpdate::new().remove_peer_by_key(&key);
@@ -138,7 +138,7 @@ fn remove_peer(name: &str, public_key: &str) -> NifResult<()> {
         .apply(&iname, BACKEND)
         .map_err(|e| Error::Term(Box::new(e.to_string())))?;
 
-    Ok(())
+    Ok(atom::ok())
 }
 
 fn parse_iname(name: &str) -> NifResult<InterfaceName> {
