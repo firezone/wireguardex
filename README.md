@@ -1,6 +1,7 @@
 # WireguardEx
 
-**TODO: Add description**
+WireguardEx is an Elixir library for configuring Wireguard interfaces via a NIF
+implemented in [Rust](https://rust-lang.org).
 
 ## Installation
 
