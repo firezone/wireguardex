@@ -18,6 +18,9 @@ defmodule WireguardEx do
   def set_device(_name, _device_config), do: error()
   def delete_device(_name), do: error()
   def remove_peer(_name, _public_key), do: error()
+  def generate_private_key(), do: error()
+  def generate_preshared_key(), do: error()
+  def get_public_key(_private_key), do: error()
 
   defp error, do: :erlang.nif_error(:nif_not_loaded)
 end
