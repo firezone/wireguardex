@@ -16,7 +16,7 @@ const BACKEND: Backend = Backend::Kernel;
 const BACKEND: Backend = Backend::Userspace;
 
 #[derive(NifStruct)]
-#[module = "Elixir.WireguardEx.Device"]
+#[module = "WireguardEx.Device"]
 struct NifDevice {
     name: String,
     public_key: Option<String>,
@@ -77,7 +77,7 @@ impl TryFrom<NifDeviceConfig> for DeviceUpdate {
 }
 
 #[derive(NifStruct)]
-#[module = "Elixir.WireguardEx.DeviceConfig"]
+#[module = "WireguardEx.DeviceConfig"]
 struct NifDeviceConfig {
     public_key: Option<String>,
     private_key: Option<String>,

@@ -10,7 +10,7 @@ use wireguard_control::{AllowedIp, PeerConfig, PeerConfigBuilder, PeerInfo, Peer
 use crate::key;
 
 #[derive(NifStruct)]
-#[module = "Elixir.WireguardEx.PeerConfig"]
+#[module = "WireguardEx.PeerConfig"]
 pub(crate) struct NifPeerConfig {
     public_key: String,
     preshared_key: Option<String>,
@@ -79,7 +79,7 @@ impl TryFrom<NifPeerConfig> for PeerConfigBuilder {
 }
 
 #[derive(NifStruct)]
-#[module = "Elixir.WireguardEx.PeerInfo"]
+#[module = "WireguardEx.PeerInfo"]
 pub(crate) struct NifPeerInfo {
     config: NifPeerConfig,
     stats: NifPeerStats,
@@ -95,7 +95,7 @@ impl From<PeerInfo> for NifPeerInfo {
 }
 
 #[derive(NifStruct)]
-#[module = "Elixir.WireguardEx.PeerStats"]
+#[module = "WireguardEx.PeerStats"]
 struct NifPeerStats {
     last_handshake_time: Option<u64>,
     rx_bytes: u64,

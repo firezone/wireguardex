@@ -1,3 +1,5 @@
+//! nif bindings for generating wireguard keys
+
 use rustler::{Error, NifResult};
 use wireguard_control::Key;
 
