@@ -51,4 +51,5 @@ jobs:
       - run: mix compile --warning-as-errors
         env:
           RUST_BACKTRACE: 1
-      - run: sudo -E bash -c 'PATH=$PATH:$INSTALL_DIR_FOR_ELIXIR/bin && mix test'
+      - run: setcap cap_net_admin,cap_net_raw,cap_dac_read_search+eip $INSTALL_DIR_FOR_ELIXIR/bin/mix
+      - run: mix test
