@@ -8,7 +8,7 @@ use device::{delete_device, get_device, list_devices, remove_peer, set_device};
 use key::{generate_preshared_key, generate_private_key, get_public_key};
 
 rustler::init!(
-    "Elixir.WireguardEx",
+    "Elixir.Wireguardex",
     [
         list_devices,
         get_device,

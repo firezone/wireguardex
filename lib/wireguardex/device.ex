@@ -1,6 +1,6 @@
-defmodule WireguardEx.Device do
+defmodule Wireguardex.Device do
   @moduledoc """ 
-  Documentation for WireguardEx.Device
+  Documentation for Wireguardex.Device
   """
   defstruct name: "",
             public_key: nil,

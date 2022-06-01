@@ -1,4 +1,4 @@
-defmodule WireguardEx.MixProject do
+defmodule Wireguardex.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/firezone/wireguardex"
@@ -46,7 +46,7 @@ defmodule WireguardEx.MixProject do
   defp aliases do
     [
       # force NIF compilation for tests
-      test: [fn _ -> System.put_env("WIREGUARDEX_BUILD", "true") end, "test"]
+      test: [fn _ -> System.put_env("WIREGUARDNIF_BUILD", "true") end, "test"]
     ]
   end
 end

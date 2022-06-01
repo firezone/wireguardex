@@ -1,6 +1,6 @@
-defmodule WireguardEx do
+defmodule Wireguardex do
   @moduledoc """
-  Documentation for `WireguardEx`.
+  Documentation for `Wireguardex`.
   """
   mix_config = Mix.Project.config()
   version = mix_config[:version]

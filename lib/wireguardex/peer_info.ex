@@ -1,10 +1,10 @@
-defmodule WireguardEx.PeerInfo do
+defmodule Wireguardex.PeerInfo do
   @moduledoc """ 
-  Documentation for WireguardEx.PeerInfo
+  Documentation for Wireguardex.PeerInfo
   """
 
-  alias WireguardEx.PeerConfig
-  alias WireguardEx.PeerStats
+  alias Wireguardex.PeerConfig
+  alias Wireguardex.PeerStats
 
   defstruct config: %PeerConfig{},
             stats: %PeerStats{}

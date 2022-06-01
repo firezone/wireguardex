@@ -1,4 +1,4 @@
-# WireguardEx
+# Wireguardex
 
 An Elixir library for configuring WireGuard interfaces via NIFs implemented in
 [Rust](https://rust-lang.org).

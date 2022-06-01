@@ -1,24 +1,24 @@
-defmodule WireguardExTest do
+defmodule WireguardexTest do
   use ExUnit.Case
-  doctest WireguardEx
+  doctest Wireguardex
 
   test "set device" do
     interface_name = "wg0"
-    private_key = WireguardEx.generate_private_key()
-    public_key = WireguardEx.get_public_key(private_key)
+    private_key = Wireguardex.generate_private_key()
+    public_key = Wireguardex.get_public_key(private_key)
     listen_port = 58210
     fwmark = 1234
 
     set_result =
-      WireguardEx.set_device(interface_name, %WireguardEx.DeviceConfig{
+      Wireguardex.set_device(interface_name, %Wireguardex.DeviceConfig{
         public_key: public_key,
         private_key: private_key,
         fwmark: fwmark,
         listen_port: listen_port
       })
 
-    device = WireguardEx.get_device(interface_name)
-    delete_result = WireguardEx.delete_device(interface_name)
+    device = Wireguardex.get_device(interface_name)
+    delete_result = Wireguardex.delete_device(interface_name)
 
     assert set_result == :ok
     assert delete_result == :ok
@@ -31,9 +31,9 @@ defmodule WireguardExTest do
 
   test "list devices" do
     interface_name = "wg1"
-    set_result = WireguardEx.set_device(interface_name, %WireguardEx.DeviceConfig{})
-    devices = WireguardEx.list_devices()
-    delete_result = WireguardEx.delete_device(interface_name)
+    set_result = Wireguardex.set_device(interface_name, %Wireguardex.DeviceConfig{})
+    devices = Wireguardex.list_devices()
+    delete_result = Wireguardex.delete_device(interface_name)
 
     assert set_result == :ok
     assert delete_result == :ok
@@ -44,26 +44,26 @@ defmodule WireguardExTest do
     interface_name = "wg2"
 
     peers = [
-      %WireguardEx.PeerConfig{
-        public_key: WireguardEx.get_public_key(WireguardEx.generate_private_key()),
-        preshared_key: WireguardEx.generate_preshared_key(),
+      %Wireguardex.PeerConfig{
+        public_key: Wireguardex.get_public_key(Wireguardex.generate_private_key()),
+        preshared_key: Wireguardex.generate_preshared_key(),
         endpoint: "127.0.0.1:1234",
         persistent_keepalive_interval: 60,
         allowed_ips: ["192.168.0.0/24", "163.23.42.242/32"]
       },
-      %WireguardEx.PeerConfig{
-        public_key: WireguardEx.get_public_key(WireguardEx.generate_private_key()),
-        preshared_key: WireguardEx.generate_preshared_key(),
+      %Wireguardex.PeerConfig{
+        public_key: Wireguardex.get_public_key(Wireguardex.generate_private_key()),
+        preshared_key: Wireguardex.generate_preshared_key(),
         endpoint: "127.0.0.2:1234",
         persistent_keepalive_interval: 30,
         allowed_ips: ["255.0.0.0/24", "127.0.0.0/16"]
       }
     ]
 
-    set_result = WireguardEx.set_device(interface_name, %WireguardEx.DeviceConfig{peers: peers})
+    set_result = Wireguardex.set_device(interface_name, %Wireguardex.DeviceConfig{peers: peers})
 
-    device = WireguardEx.get_device(interface_name)
-    delete_result = WireguardEx.delete_device(interface_name)
+    device = Wireguardex.get_device(interface_name)
+    delete_result = Wireguardex.delete_device(interface_name)
 
     assert set_result == :ok
     assert delete_result == :ok

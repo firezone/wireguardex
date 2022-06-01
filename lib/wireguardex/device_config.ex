@@ -1,6 +1,6 @@
-defmodule WireguardEx.DeviceConfig do
+defmodule Wireguardex.DeviceConfig do
   @moduledoc """ 
-  Documentation for WireguardEx.DeviceConfig
+  Documentation for Wireguardex.DeviceConfig
   """
   defstruct public_key: nil,
             private_key: nil,

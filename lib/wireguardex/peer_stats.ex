@@ -1,6 +1,6 @@
-defmodule WireguardEx.PeerStats do
+defmodule Wireguardex.PeerStats do
   @moduledoc """ 
-  Documentation for WireguardEx.PeerStats
+  Documentation for Wireguardex.PeerStats
   """
   defstruct last_handshake_time: nil,
             rx_bytes: 0,

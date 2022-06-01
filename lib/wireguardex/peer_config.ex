@@ -1,6 +1,6 @@
-defmodule WireguardEx.PeerConfig do
+defmodule Wireguardex.PeerConfig do
   @moduledoc """ 
-  Documentation for WireguardEx.PeerConfig
+  Documentation for Wireguardex.PeerConfig
   """
   defstruct public_key: "",
             preshared_key: nil,
