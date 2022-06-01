@@ -46,9 +46,6 @@ jobs:
             _build
             !_build/*/lib/wireguardex
           key: ${{ runner.os }}[${{ matrix.otp }}/${{ matrix.elixir }}]-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
-
-        # Run tests
-      - name: Run tests
       - run: mix deps.get
       - run: mix deps.compile
       - run: mix compile --warning-as-errors
