@@ -60,11 +60,7 @@ defmodule WireguardExTest do
       }
     ]
 
-    set_result =
-      WireguardEx.set_device(interface_name, %WireguardEx.DeviceConfig{
-        peers: peers,
-        replace_peers: true
-      })
+    set_result = WireguardEx.set_device(interface_name, %WireguardEx.DeviceConfig{peers: peers})
 
     device = WireguardEx.get_device(interface_name)
     delete_result = WireguardEx.delete_device(interface_name)
