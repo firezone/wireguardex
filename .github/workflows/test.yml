@@ -55,4 +55,4 @@ jobs:
           mix deps.get
           mix deps.compile
           mix compile --warnings-as-errors
-          mix test
+          sudo -E mix test

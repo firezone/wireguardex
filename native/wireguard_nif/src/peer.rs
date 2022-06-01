@@ -29,10 +29,7 @@ impl From<PeerConfig> for NifPeerConfig {
             allowed_ips: config
                 .allowed_ips
                 .iter()
-                // wireguard_control has a string via a Debug trait for the
-                // AllowedIp struct that formats the allowed ip with its
-                // cidr subnet mask
-                .map(|ip| format!("{:?}", ip))
+                .map(|ip| format!("{}/{}", ip.address, ip.cidr))
                 .collect(),
         }
     }
