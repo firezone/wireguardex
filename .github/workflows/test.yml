@@ -51,4 +51,4 @@ jobs:
       - run: mix compile --warning-as-errors
         env:
           RUST_BACKTRACE: 1
-      - run: sudo -E bash -c 'PATH=$PATH:$INSTALL_DIR_FOR_ELIXIR/bin && . $HOME/.cargo/env && mix test'
+      - run: sudo -E bash -c 'PATH=$PATH:$INSTALL_DIR_FOR_ELIXIR/bin && . $HOME/.cargo/env && mix test --no-compile'
