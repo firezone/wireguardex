@@ -46,9 +46,10 @@ jobs:
             _build
             !_build/*/lib/wireguardex
           key: ${{ runner.os }}[${{ matrix.otp }}/${{ matrix.elixir }}]-mix-v1-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+      - run: mix local.hex --force
       - run: mix deps.get
       - run: mix deps.compile
       - run: mix compile --warning-as-errors
         env:
           RUST_BACKTRACE: 1
-      - run: sudo -E bash -c 'PATH=$PATH:$INSTALL_DIR_FOR_ELIXIR/bin && . $HOME/.cargo/env && mix test --no-compile'
+      - run: sudo -E bash -c 'PATH=$PATH:$INSTALL_DIR_FOR_ELIXIR/bin && . $HOME/.cargo/env && mix test'
