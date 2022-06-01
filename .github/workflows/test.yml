@@ -49,7 +49,6 @@ jobs:
       - run: mix deps.get
       - run: mix deps.compile
       - run: mix compile --warning-as-errors
-      - run: sudo setcap cap_net_admin,cap_net_raw,cap_dac_read_search+eip $INSTALL_DIR_FOR_OTP/bin/erl
         env:
           RUST_BACKTRACE: 1
-      - run: mix test
+      - run: sudo -E bash -c 'PATH=$PATH:$INSTALL_DIR_FOR_ELIXIR/bin && . $HOME/.cargo/env && mix test'
