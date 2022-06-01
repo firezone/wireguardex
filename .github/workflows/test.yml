@@ -45,14 +45,13 @@ jobs:
             deps
             _build
             !_build/*/lib/wireguardex
-          key: ${{ runner.os }}[${{ matrix.otp }}/${{ matrix.elixir }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          key: ${{ runner.os }}[${{ matrix.otp }}/${{ matrix.elixir }}]-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
 
         # Run tests
       - name: Run tests
+      - run: mix deps.get
+      - run: mix deps.compile
+      - run: mix compile --warning-as-errors
         env:
           RUST_BACKTRACE: 1
-        run: |
-          mix deps.get
-          mix deps.compile
-          mix compile --warnings-as-errors
-          sudo -E bash -c 'PATH=$PATH:$INSTALL_DIR_FOR_ELIXIR/bin && mix test'
+      - run: sudo -E bash -c 'PATH=$PATH:$INSTALL_DIR_FOR_ELIXIR/bin && mix test'
