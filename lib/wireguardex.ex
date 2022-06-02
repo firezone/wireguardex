@@ -1,6 +1,10 @@
 defmodule Wireguardex do
   @moduledoc """
-  Documentation for `Wireguardex`.
+  Wireguardex is an Elixir library for configuring WireGuard interfaces. It uses
+  [Rust](https://rust-lang.org) NIFs for performance and safety.
+
+  This is the main module, providing the API for interface configuration and
+  utilities such as key generation.
   """
   mix_config = Mix.Project.config()
   version = mix_config[:version]
