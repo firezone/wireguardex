@@ -106,9 +106,15 @@ jobs:
         id: rename
         shell: bash
         run: |
+          LIB_PREFIX="lib"
+          case ${{ matrix.job.target }} in
+            *-pc-windows-*) LIB_PREFIX="" ;;
+          esac;
+
           LIB_SUFFIX=".so"
           case ${{ matrix.job.target }} in
             *-apple-darwin) LIB_SUFFIX=".dylib" ;;
+            *-pc-windows-*) LIB_SUFFIX=".dll" ;;
           esac;
 
           CICD_INTERMEDIATES_DIR=$(mktemp -d)
