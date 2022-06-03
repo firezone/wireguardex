@@ -39,7 +39,7 @@ defmodule Wireguardex.MixProject do
     [
       description: "An Elixir library for configuring WireGuard interfaces via NIFs in Rust",
       maintainers: ["Andrew Rousset <andrew@firezone.dev>"],
-      licenses: ["Apache 2.0"],
+      licenses: ["Apache-2.0"],
       files: ~w(lib native .formatter.exs README* LICENSE* mix.exs checksum-*.exs),
       links: %{"GitHub" => @source_url}
     ]
