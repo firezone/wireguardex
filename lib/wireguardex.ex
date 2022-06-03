@@ -47,7 +47,7 @@ defmodule Wireguardex do
   Returns `:ok` if successful. `{:error, error_info}` will be returned if setting
   the device fails.
   """
-  def set_device(_name, _device_config), do: error()
+  def set_device(_device_config, _name), do: error()
 
   @doc """
   Delete a `Device` by its interface name.
