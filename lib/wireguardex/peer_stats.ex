@@ -7,7 +7,7 @@ defmodule Wireguardex.PeerStats do
 
   * `last_handshake_time` Timestamp of the last handshake/rekey with this peer.
   * `rx_bytes` Number of bytes received from this peer.
-  * `tx_bytes' Number of bytes transmitted to this peer.
+  * `tx_bytes` Number of bytes transmitted to this peer.
   """
   defstruct last_handshake_time: nil,
             rx_bytes: 0,

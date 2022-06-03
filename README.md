@@ -5,8 +5,8 @@ An Elixir library for configuring WireGuard interfaces via NIFs implemented in
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `wireguardex` to your list of dependencies in `mix.exs`:
+The package can be installed by adding `wireguardex` to your list of dependencies
+in `mix.exs`:
 
 ```elixir
 def deps do
@@ -16,7 +16,18 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/wireguardex>.
+Wireguardex will try to download a precompiled NIF library. If you want to compile
+your own NIF, you'll need to have Rust installed. The common option is to use
+[Rustup](https://rustup.rs/).
 
+To force compiliation you can set the environment variable `WIREGUARDNIF_BUILD`
+to `true` or `1`. Or you can set the application env to force the NIF to compile:
+
+```elixir
+config :ruslter_precompiled, :force_build, wireguardex: true
+```
+
+## Tests
+
+Running the tests will also require a Rust installation, as the NIF is compiled
+locally before running the tests.

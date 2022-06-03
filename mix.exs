@@ -11,10 +11,11 @@ defmodule Wireguardex.MixProject do
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       compilers: Mix.compilers(),
-      name: "wireguardex",
+      name: "Wireguardex",
       package: package(),
       deps: deps(),
-      aliases: aliases()
+      aliases: aliases(),
+      docs: docs()
     ]
   end
 
@@ -29,17 +30,29 @@ defmodule Wireguardex.MixProject do
   defp deps do
     [
       {:rustler_precompiled, "~> 0.5.1"},
-      {:rustler, ">= 0.0.0", optional: true}
+      {:rustler, ">= 0.0.0", optional: true},
+      {:ex_doc, "~> 0.27", only: :dev, runtime: false}
     ]
   end
 
   defp package do
     [
-      description: "Native wireguard library implemented in Rust",
+      description: "An Elixir library for configuring WireGuard interfaces via NIFs in Rust",
       maintainers: ["Andrew Rousset <andrew@firezone.dev>"],
       licenses: ["Apache 2.0"],
-      files: ~w(lib native .formatter.exs README* LICENSE* mix.ecs checksums-*.exs),
+      files: ~w(lib native .formatter.exs README* LICENSE* mix.exs checksum-*.exs),
       links: %{"GitHub" => @source_url}
+    ]
+  end
+
+  defp docs do
+    [
+      main: "readme",
+      extras: ["README.md": [title: "Overview"]],
+      source_url: @source_url,
+      source_ref: "v#{@version}",
+      hompage_url: @source_url,
+      formatters: ["html"]
     ]
   end
 
