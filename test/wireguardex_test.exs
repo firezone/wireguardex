@@ -70,4 +70,27 @@ defmodule WireguardExTest do
     assert List.first(device.peers).config == List.first(peers)
     assert List.last(device.peers).config == List.last(peers)
   end
+
+  test "add peer to device after creation" do
+    interface_name = "wg3"
+
+    peer = %WireguardEx.PeerConfig{
+      public_key: WireguardEx.get_public_key(WireguardEx.generate_private_key()),
+      preshared_key: WireguardEx.generate_preshared_key(),
+      endpoint: "127.0.0.1:1234",
+      persistent_keepalive_interval: 60,
+      allowed_ips: ["192.168.0.0/24", "163.23.42.242/32"]
+    }
+
+    set_result = WireguardEx.set_device(interface_name, %WireguardEx.DeviceConfig{})
+
+    add_result = WireguardEx.add_peer(interface_name, peer)
+    device = WireguardEx.get_device(interface_name)
+    delete_result = WireguardEx.delete_device(interface_name)
+
+    assert set_result == :ok
+    assert add_result == :ok
+    assert List.first(device.peers).config == peer
+    assert delete_result == :ok
+  end
 end

@@ -3,9 +3,7 @@
 use std::convert::{TryFrom, TryInto};
 
 use rustler::{types::atom, Atom, Error, NifResult, NifStruct};
-use wireguard_control::{
-    Backend, Device, DeviceUpdate, InterfaceName, InvalidInterfaceName, PeerConfigBuilder,
-};
+use wireguard_control::{Backend, Device, DeviceUpdate, InterfaceName, PeerConfigBuilder};
 
 use crate::key;
 use crate::peer::{NifPeerConfig, NifPeerInfo};
@@ -89,8 +87,7 @@ struct NifDeviceConfig {
 
 #[rustler::nif]
 fn list_devices() -> NifResult<Vec<String>> {
-    Ok(Device::list(BACKEND)
-        .map_err(|e| Error::Term(Box::new(e.to_string())))?
+    Ok(to_term_error(Device::list(BACKEND))?
         .iter()
         .map(|iname| iname.as_str_lossy().to_string())
         .collect())
@@ -99,7 +96,7 @@ fn list_devices() -> NifResult<Vec<String>> {
 #[rustler::nif]
 fn get_device(name: &str) -> NifResult<NifDevice> {
     let iname = parse_iname(name)?;
-    let device = Device::get(&iname, BACKEND).map_err(|e| Error::Term(Box::new(e.to_string())))?;
+    let device = to_term_error(Device::get(&iname, BACKEND))?;
 
     Ok(device.into())
 }
@@ -109,9 +106,7 @@ fn set_device(name: &str, config: NifDeviceConfig) -> NifResult<Atom> {
     let iname = parse_iname(name)?;
     let device: DeviceUpdate = config.try_into()?;
 
-    device
-        .apply(&iname, BACKEND)
-        .map_err(|e| Error::Term(Box::new(e.to_string())))?;
+    to_term_error(device.apply(&iname, BACKEND))?;
 
     Ok(atom::ok())
 }
@@ -119,11 +114,9 @@ fn set_device(name: &str, config: NifDeviceConfig) -> NifResult<Atom> {
 #[rustler::nif]
 fn delete_device(name: &str) -> NifResult<Atom> {
     let iname = parse_iname(name)?;
-    let device = Device::get(&iname, BACKEND).map_err(|e| Error::Term(Box::new(e.to_string())))?;
+    let device = to_term_error(Device::get(&iname, BACKEND))?;
 
-    device
-        .delete()
-        .map_err(|e| Error::Term(Box::new(e.to_string())))?;
+    to_term_error(device.delete())?;
 
     Ok(atom::ok())
 }
@@ -134,14 +127,25 @@ fn remove_peer(name: &str, public_key: &str) -> NifResult<Atom> {
     let key = key::from_base64(public_key)?;
     let device = DeviceUpdate::new().remove_peer_by_key(&key);
 
-    device
-        .apply(&iname, BACKEND)
-        .map_err(|e| Error::Term(Box::new(e.to_string())))?;
+    to_term_error(device.apply(&iname, BACKEND))?;
+
+    Ok(atom::ok())
+}
+
+#[rustler::nif]
+fn add_peer(name: &str, peer: NifPeerConfig) -> NifResult<Atom> {
+    let iname = parse_iname(name)?;
+    let device = DeviceUpdate::new().add_peer(peer.try_into()?);
+
+    to_term_error(device.apply(&iname, BACKEND))?;
 
     Ok(atom::ok())
 }
 
 fn parse_iname(name: &str) -> NifResult<InterfaceName> {
-    name.parse()
-        .map_err(|e: InvalidInterfaceName| Error::Term(Box::new(e.to_string())))
+    to_term_error(name.parse())
+}
+
+pub(crate) fn to_term_error<T>(res: Result<T, impl ToString>) -> NifResult<T> {
+    res.map_err(|e| Error::Term(Box::new(e.to_string())))
 }
