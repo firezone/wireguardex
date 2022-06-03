@@ -58,6 +58,14 @@ defmodule Wireguardex do
   def remove_peer(_name, _public_key), do: error()
 
   @doc """
+  Add a peer to a `Device`.
+
+  Returns `:ok` if successful. `{:error, error_info}` will be returned if adding
+  the peer to the device fails.
+  """
+  def add_peer(_name, _peer), do: error()
+
+  @doc """
   Generates a random private key. It is returned as a base64 string.
   """
   def generate_private_key(), do: error()

@@ -4,7 +4,7 @@ mod device;
 mod key;
 mod peer;
 
-use device::{delete_device, get_device, list_devices, remove_peer, set_device};
+use device::{delete_device, get_device, list_devices, remove_peer, set_device, add_peer};
 use key::{generate_preshared_key, generate_private_key, get_public_key};
 
 rustler::init!(
@@ -18,5 +18,6 @@ rustler::init!(
         generate_private_key,
         generate_preshared_key,
         get_public_key,
+        add_peer,
     ]
 );

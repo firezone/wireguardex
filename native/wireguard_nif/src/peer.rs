@@ -1,13 +1,12 @@
 //! nif bindings for wireguard peers
 
 use std::convert::TryFrom;
-use std::net::AddrParseError;
 use std::time::SystemTime;
 
 use rustler::{Error, NifResult, NifStruct};
 use wireguard_control::{AllowedIp, PeerConfig, PeerConfigBuilder, PeerInfo, PeerStats};
 
-use crate::key;
+use crate::{device::to_term_error, key};
 
 #[derive(NifStruct)]
 #[module = "Wireguardex.PeerConfig"]
@@ -59,11 +58,7 @@ impl TryFrom<NifPeerConfig> for PeerConfigBuilder {
             config = config.set_preshared_key(key::from_base64(&preshared_key)?);
         }
         if let Some(endpoint) = endpoint {
-            config = config.set_endpoint(
-                endpoint
-                    .parse()
-                    .map_err(|e: AddrParseError| Error::Term(Box::new(e.to_string())))?,
-            );
+            config = config.set_endpoint(to_term_error(endpoint.parse())?);
         }
         if let Some(persistent_keepalive_interval) = persistent_keepalive_interval {
             config = config.set_persistent_keepalive_interval(persistent_keepalive_interval);

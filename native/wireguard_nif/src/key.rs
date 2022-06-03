@@ -1,7 +1,9 @@
 //! nif bindings for generating wireguard keys
 
-use rustler::{Error, NifResult};
+use rustler::NifResult;
 use wireguard_control::Key;
+
+use crate::device::to_term_error;
 
 #[rustler::nif]
 fn generate_private_key() -> String {
@@ -25,5 +27,5 @@ fn get_public_key(key: &str) -> NifResult<String> {
 }
 
 pub(crate) fn from_base64(key: &str) -> NifResult<Key> {
-    Key::from_base64(key).map_err(|e| Error::Term(Box::new(e.to_string())))
+    to_term_error(Key::from_base64(key))
 }
