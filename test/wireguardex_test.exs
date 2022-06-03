@@ -74,19 +74,19 @@ defmodule WireguardexTest do
   test "add peer to device after creation" do
     interface_name = "wg3"
 
-    peer = %WireguardEx.PeerConfig{
-      public_key: WireguardEx.get_public_key(WireguardEx.generate_private_key()),
-      preshared_key: WireguardEx.generate_preshared_key(),
+    peer = %Wireguardex.PeerConfig{
+      public_key: Wireguardex.get_public_key(Wireguardex.generate_private_key()),
+      preshared_key: Wireguardex.generate_preshared_key(),
       endpoint: "127.0.0.1:1234",
       persistent_keepalive_interval: 60,
       allowed_ips: ["192.168.0.0/24", "163.23.42.242/32"]
     }
 
-    set_result = WireguardEx.set_device(interface_name, %WireguardEx.DeviceConfig{})
+    set_result = Wireguardex.set_device(interface_name, %Wireguardex.DeviceConfig{})
 
-    add_result = WireguardEx.add_peer(interface_name, peer)
-    device = WireguardEx.get_device(interface_name)
-    delete_result = WireguardEx.delete_device(interface_name)
+    add_result = Wireguardex.add_peer(interface_name, peer)
+    device = Wireguardex.get_device(interface_name)
+    delete_result = Wireguardex.delete_device(interface_name)
 
     assert set_result == :ok
     assert add_result == :ok

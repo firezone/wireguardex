@@ -36,6 +36,8 @@ defmodule Wireguardex do
   @doc """
   Set a `Device` by its interface name using a `DeviceConfig`.
 
+  Note if no device is present, a new one will be created for the given interface name.
+
   Returns `:ok` if successful. `{:error, error_info}` will be returned if setting
   the device fails.
   """
