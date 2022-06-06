@@ -102,7 +102,7 @@ fn get_device(name: &str) -> NifResult<NifDevice> {
 }
 
 #[rustler::nif]
-fn set_device(name: &str, config: NifDeviceConfig) -> NifResult<Atom> {
+fn set_device(config: NifDeviceConfig, name: &str) -> NifResult<Atom> {
     let iname = parse_iname(name)?;
     let device: DeviceUpdate = config.try_into()?;
 

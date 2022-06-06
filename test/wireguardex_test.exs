@@ -1,6 +1,11 @@
 defmodule WireguardexTest do
   use ExUnit.Case
+  import Wireguardex.DeviceConfigBuilder, except: [public_key: 2]
+  import Wireguardex.PeerConfigBuilder, except: [public_key: 2]
+  import Wireguardex, only: [set_device: 2]
   doctest Wireguardex
+  doctest Wireguardex.DeviceConfigBuilder
+  doctest Wireguardex.PeerConfigBuilder
 
   test "set device" do
     interface_name = "wg0"
@@ -10,12 +15,12 @@ defmodule WireguardexTest do
     fwmark = 1234
 
     set_result =
-      Wireguardex.set_device(interface_name, %Wireguardex.DeviceConfig{
-        public_key: public_key,
-        private_key: private_key,
-        fwmark: fwmark,
-        listen_port: listen_port
-      })
+      device_config()
+      |> private_key(private_key)
+      |> Wireguardex.PeerConfigBuilder.public_key(public_key)
+      |> listen_port(listen_port)
+      |> fwmark(fwmark)
+      |> set_device(interface_name)
 
     device = Wireguardex.get_device(interface_name)
     delete_result = Wireguardex.delete_device(interface_name)
@@ -31,7 +36,7 @@ defmodule WireguardexTest do
 
   test "list devices" do
     interface_name = "wg1"
-    set_result = Wireguardex.set_device(interface_name, %Wireguardex.DeviceConfig{})
+    set_result = Wireguardex.set_device(%Wireguardex.DeviceConfig{}, interface_name)
     devices = Wireguardex.list_devices()
     delete_result = Wireguardex.delete_device(interface_name)
 
@@ -44,23 +49,28 @@ defmodule WireguardexTest do
     interface_name = "wg2"
 
     peers = [
-      %Wireguardex.PeerConfig{
-        public_key: Wireguardex.get_public_key(Wireguardex.generate_private_key()),
-        preshared_key: Wireguardex.generate_preshared_key(),
-        endpoint: "127.0.0.1:1234",
-        persistent_keepalive_interval: 60,
-        allowed_ips: ["192.168.0.0/24", "163.23.42.242/32"]
-      },
-      %Wireguardex.PeerConfig{
-        public_key: Wireguardex.get_public_key(Wireguardex.generate_private_key()),
-        preshared_key: Wireguardex.generate_preshared_key(),
-        endpoint: "127.0.0.2:1234",
-        persistent_keepalive_interval: 30,
-        allowed_ips: ["255.0.0.0/24", "127.0.0.0/16"]
-      }
+      peer_config()
+      |> Wireguardex.PeerConfigBuilder.public_key(
+        Wireguardex.get_public_key(Wireguardex.generate_private_key())
+      )
+      |> preshared_key(Wireguardex.generate_preshared_key())
+      |> endpoint("127.0.0.1:1234")
+      |> persistent_keepalive_interval(60)
+      |> allowed_ips(["192.168.0.0/24", "163.23.42.242/32"]),
+      peer_config()
+      |> Wireguardex.PeerConfigBuilder.public_key(
+        Wireguardex.get_public_key(Wireguardex.generate_private_key())
+      )
+      |> preshared_key(Wireguardex.generate_preshared_key())
+      |> endpoint("127.0.0.1:1234")
+      |> persistent_keepalive_interval(30)
+      |> allowed_ips(["255.0.0.0/24", "127.0.0.0/16"])
     ]
 
-    set_result = Wireguardex.set_device(interface_name, %Wireguardex.DeviceConfig{peers: peers})
+    set_result =
+      device_config()
+      |> peers(peers)
+      |> set_device(interface_name)
 
     device = Wireguardex.get_device(interface_name)
     delete_result = Wireguardex.delete_device(interface_name)
@@ -82,7 +92,9 @@ defmodule WireguardexTest do
       allowed_ips: ["192.168.0.0/24", "163.23.42.242/32"]
     }
 
-    set_result = Wireguardex.set_device(interface_name, %Wireguardex.DeviceConfig{})
+    set_result =
+      device_config()
+      |> set_device(interface_name)
 
     add_result = Wireguardex.add_peer(interface_name, peer)
     device = Wireguardex.get_device(interface_name)
