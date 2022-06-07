@@ -26,7 +26,7 @@ defmodule Wireguardex do
   @doc """
   Get a list of interfaces from wireguard.
 
-  Returns `{:ok, [...]}` if successful. `{:error, error_info}` will be returned
+  Returns `[...]` if successful. `{:error, error_info}` will be returned
   if listing the devices fails.
   """
   def list_devices, do: error()
@@ -34,7 +34,7 @@ defmodule Wireguardex do
   @doc """
   Get a `Device` by its interface name.
 
-  Returns `{:ok, Device}` if successful. `{:error, error_info}` will be returned
+  Returns `Device` if successful. `{:error, error_info}` will be returned
   if getting the device fails.
   """
   def get_device(_name), do: error()
