@@ -71,7 +71,7 @@ impl TryFrom<NifPeerConfig> for PeerConfigBuilder {
 }
 
 #[derive(NifStruct)]
-#[module = "WireguardEx.PeerInfo"]
+#[module = "Wireguardex.PeerInfo"]
 pub(crate) struct NifPeerInfo {
     config: NifPeerConfig,
     stats: NifPeerStats,
