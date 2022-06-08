@@ -86,19 +86,19 @@ struct NifDeviceConfig {
 }
 
 #[rustler::nif]
-fn list_devices() -> NifResult<Vec<String>> {
-    Ok(to_term_error(Device::list(BACKEND))?
+fn list_devices() -> NifResult<(Atom, Vec<String>)> {
+    Ok((atom::ok(), to_term_error(Device::list(BACKEND))?
         .iter()
         .map(|iname| iname.as_str_lossy().to_string())
-        .collect())
+        .collect()))
 }
 
 #[rustler::nif]
-fn get_device(name: &str) -> NifResult<NifDevice> {
+fn get_device(name: &str) -> NifResult<(Atom, NifDevice)> {
     let iname = parse_iname(name)?;
     let device = to_term_error(Device::get(&iname, BACKEND))?;
 
-    Ok(device.into())
+    Ok((atom::ok(), device.into()))
 }
 
 #[rustler::nif]
