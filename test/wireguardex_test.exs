@@ -14,7 +14,7 @@ defmodule WireguardexTest do
     listen_port = 58210
     fwmark = 1234
 
-    set_result =
+    :ok =
       device_config()
       |> private_key(private_key)
       |> Wireguardex.PeerConfigBuilder.public_key(public_key)
@@ -22,11 +22,9 @@ defmodule WireguardexTest do
       |> fwmark(fwmark)
       |> set_device(interface_name)
 
-    device = Wireguardex.get_device(interface_name)
-    delete_result = Wireguardex.delete_device(interface_name)
+    {:ok, device} = Wireguardex.get_device(interface_name)
+    :ok = Wireguardex.delete_device(interface_name)
 
-    assert set_result == :ok
-    assert delete_result == :ok
     assert device.name == interface_name
     assert device.public_key == public_key
     assert device.private_key == private_key
@@ -36,12 +34,10 @@ defmodule WireguardexTest do
 
   test "list devices" do
     interface_name = "wg1"
-    set_result = Wireguardex.set_device(%Wireguardex.DeviceConfig{}, interface_name)
-    devices = Wireguardex.list_devices()
-    delete_result = Wireguardex.delete_device(interface_name)
+    :ok = Wireguardex.set_device(%Wireguardex.DeviceConfig{}, interface_name)
+    {:ok, devices} = Wireguardex.list_devices()
+    :ok = Wireguardex.delete_device(interface_name)
 
-    assert set_result == :ok
-    assert delete_result == :ok
     assert List.first(devices) == interface_name
   end
 
@@ -67,16 +63,14 @@ defmodule WireguardexTest do
       |> allowed_ips(["255.0.0.0/24", "127.0.0.0/16"])
     ]
 
-    set_result =
+    :ok =
       device_config()
       |> peers(peers)
       |> set_device(interface_name)
 
-    device = Wireguardex.get_device(interface_name)
-    delete_result = Wireguardex.delete_device(interface_name)
+    {:ok, device} = Wireguardex.get_device(interface_name)
+    :ok = Wireguardex.delete_device(interface_name)
 
-    assert set_result == :ok
-    assert delete_result == :ok
     assert List.first(device.peers).config == List.first(peers)
     assert List.last(device.peers).config == List.last(peers)
   end
@@ -92,17 +86,14 @@ defmodule WireguardexTest do
       allowed_ips: ["192.168.0.0/24", "163.23.42.242/32"]
     }
 
-    set_result =
+    :ok =
       device_config()
       |> set_device(interface_name)
 
-    add_result = Wireguardex.add_peer(interface_name, peer)
-    device = Wireguardex.get_device(interface_name)
-    delete_result = Wireguardex.delete_device(interface_name)
+    :ok = Wireguardex.add_peer(interface_name, peer)
+    {:ok, device} = Wireguardex.get_device(interface_name)
+    :ok = Wireguardex.delete_device(interface_name)
 
-    assert set_result == :ok
-    assert add_result == :ok
     assert List.first(device.peers).config == peer
-    assert delete_result == :ok
   end
 end
