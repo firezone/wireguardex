@@ -9,11 +9,12 @@ defmodule Wireguardex.PeerConfigBuilder do
 
   ## Examples
 
-      iex> res =
+      iex> { :ok, public_key } = Wireguardex.get_public_key(Wireguardex.generate_private_key())
+      ...> res =
       ...> device_config()
       ...> |> peers([
       ...>      peer_config()
-      ...>      |> Wireguardex.PeerConfigBuilder.public_key(Wireguardex.get_public_key(Wireguardex.generate_private_key()))
+      ...>      |> Wireguardex.PeerConfigBuilder.public_key(public_key)
       ...>      |> endpoint("127.0.0.1:1234")
       ...>      |> preshared_key(Wireguardex.generate_preshared_key())
       ...>      |> persistent_keepalive_interval(60)

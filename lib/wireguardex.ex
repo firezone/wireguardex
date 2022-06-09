@@ -74,17 +74,20 @@ defmodule Wireguardex do
   def add_peer(_name, _peer), do: error()
 
   @doc """
-  Generates a random private key. It is returned as a base64 string.
+  Generates a random private key. It is returned as a byte array.
   """
   def generate_private_key(), do: error()
 
   @doc """
-  Generates a random preshared key. It is returned as a base64 string.
+  Generates a random preshared key. It is returned as a byte array.
   """
   def generate_preshared_key(), do: error()
 
   @doc """
-  Return a private key's public key as a base64 string.
+  Return a private key's public key as a byte array.
+
+  Returns `{:ok, [...]}` if successful. `{:error, error_info}` will be returned if
+  if getting the public key fails.
   """
   def get_public_key(_private_key), do: error()
 
