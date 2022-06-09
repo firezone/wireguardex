@@ -11,7 +11,7 @@ in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:wireguardex, "~> 0.1.2"}
+    {:wireguardex, "~> 0.2.0"}
   ]
 end
 ```
