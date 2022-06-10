@@ -97,4 +97,29 @@ defmodule WireguardexTest do
 
     assert List.first(device.peers).config == peer
   end
+
+  test "remove peer to device after creation" do
+    interface_name = "wg4"
+
+    {:ok, public_key} = Wireguardex.get_public_key(Wireguardex.generate_private_key())
+
+    peer = %Wireguardex.PeerConfig{
+      public_key: public_key,
+      preshared_key: Wireguardex.generate_preshared_key(),
+      endpoint: "127.0.0.1:1234",
+      persistent_keepalive_interval: 60,
+      allowed_ips: ["192.168.0.0/24", "163.23.42.242/32"]
+    }
+
+    :ok =
+      device_config()
+      |> peers([peer])
+      |> set_device(interface_name)
+
+    :ok = Wireguardex.remove_peer(interface_name, public_key)
+    {:ok, device} = Wireguardex.get_device(interface_name)
+    :ok = Wireguardex.delete_device(interface_name)
+
+    assert device.peers == []
+  end
 end

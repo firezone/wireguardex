@@ -1,7 +1,82 @@
 # Wireguardex
 
-An Elixir library for configuring WireGuard interfaces via NIFs implemented in
-[Rust](https://rust-lang.org).
+## Overview
+
+[![hex.pm](https://img.shields.io/hexpm/v/wireguardex.svg)](https://hex.pm/packages/wireguardex)
+[![hex.pm](https://img.shields.io/hexpm/dt/wireguardex.svg)](https://hex.pm/packages/wireguardex)
+[![hex.pm](https://img.shields.io/hexpm/l/wireguardex.svg)](https://hex.pm/packages/wireguardex)
+
+Elixir library for configuring [WiregGuard](https://www.wireguard.com/) interfaces exposing a native library via NIFs implemented in [Rust](https://rust-lang.org).
+
+This is done by wrapping innernet's [wireguard-control](https://github.com/tonarino/innernet/tree/main/wireguard-control) with [rustler](https://crates.io/crates/rustler).
+
+## Getting started
+
+Add `wireguardex` to your dependencies:
+```elixir
+def deps do
+  [
+    {:wireguardex, "~> 0.2.0"}
+  ]
+end
+```
+
+Then you can just use wireguardex to manage your wireguard interfaces:
+
+```elixir
+# Imports for cleanliness
+import Wireguardex.DeviceConfigBuilder
+import Wireguardex.PeerConfigBuilder
+import Wireguardex, only: [set_device: 2]
+
+interface_name = "wg0"
+private_key = Wireguardex.generate_private_key()
+{:ok, public_key} = Wireguardex.get_public_key(private_key)
+listen_port = 58210
+fwmark = 1234
+
+:ok =
+  device_config() # <-- Start configuring the devices
+  # Here we set configuration for the device
+  |> private_key(private_key)
+  |> Wireguardex.PeerConfigBuilder.public_key(public_key)
+  |> listen_port(listen_port)
+  |> fwmark(fwmark)
+  |> set_device(interface_name) # <-- This actually creates the interface
+```
+
+After creation you could also add peers:
+
+```elixir
+  # Create a peer
+  peer = peer_config()
+  |> Wireguardex.PeerConfigBuilder.public_key(public_key)
+  |> preshared_key(Wireguardex.generate_preshared_key())
+  |> endpoint("127.0.0.1:1234")
+  |> persistent_keepalive_interval(30)
+  |> allowed_ips(["255.0.0.0/24", "127.0.0.0/16"])
+
+  # Get the existing device
+  :ok = Wireguardex.add_peer(interface_name, peer)
+```
+
+And easily delete it afterwards using its public key:
+
+```elixir
+  :ok = Wireguardex.delete_peer(interface_name, public_key)
+```
+
+To get information on an existing device:
+
+```elixir
+  {:ok, device} = Wireguardex.get_device(interface_name)
+```
+
+Finally to delete a device:
+
+```elixir
+  :ok = Wireguardex.delete_device(interface_name)
+```
 
 ## Installation
 
@@ -27,7 +102,18 @@ to `true` or `1`. Or you can set the application env to force the NIF to compile
 config :ruslter_precompiled, :force_build, wireguardex: true
 ```
 
+**Note:** you will need to run this library as a user with privilege to create interfaces.
+
+## Features
+
+* Manage wireguard interfaces
+* Doesn't require a wireguard installation
+
 ## Tests
 
-Running the tests will also require a Rust installation, as the NIF is compiled
+Running the tests in this library will also require a Rust installation, as the NIF is compiled
 locally before running the tests.
+
+Follow [these](https://www.rust-lang.org/learn/get-started) instructions to install Rust.
+
+Then you can run `mix test` as long as you have the user privileges to create interfaces.
