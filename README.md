@@ -6,7 +6,7 @@
 [![hex.pm](https://img.shields.io/hexpm/dt/wireguardex.svg)](https://hex.pm/packages/wireguardex)
 [![hex.pm](https://img.shields.io/hexpm/l/wireguardex.svg)](https://hex.pm/packages/wireguardex)
 
-Elixir library for configuring [WiregGuard](https://www.wireguard.com/) interfaces exposing a native library via NIFs implemented in [Rust](https://rust-lang.org).
+Elixir library for configuring [WireGuard®](https://www.wireguard.com/) interfaces exposing a native library via NIFs implemented in [Rust](https://rust-lang.org).
 
 This is done by wrapping innernet's [wireguard-control](https://github.com/tonarino/innernet/tree/main/wireguard-control) with [rustler](https://crates.io/crates/rustler).
 
@@ -56,7 +56,7 @@ After creation you could also add peers:
   |> persistent_keepalive_interval(30)
   |> allowed_ips(["255.0.0.0/24", "127.0.0.0/16"])
 
-  # Get the existing device
+  # Add peer to existing device
   :ok = Wireguardex.add_peer(interface_name, peer)
 ```
 
@@ -102,7 +102,21 @@ to `true` or `1`. Or you can set the application env to force the NIF to compile
 config :ruslter_precompiled, :force_build, wireguardex: true
 ```
 
-**Note:** you will need to run this library as a user with privilege to create interfaces.
+### Note about privileges
+
+Since this library creates and modify network interfaces the user running this library must have the permissions to do so, by using `setcap` this can be done without sudo by modifying erlang's `beamsmp` cpabilities:
+
+```sh
+sudo setcap 'cap_net_admin+eip' <erlang_installation_path>/bin/beam.smp
+```
+
+If you're using [asdf-vm](https://asdf-vm.com/) to manage dependencies you can do:
+
+```sh
+sudo setcap 'cap_net_admin+eip' $(ls -1 `asdf where erlang 24.3.4`/erts-*/bin/beam.smp)
+```
+
+This can be handy for development and testing purposes.
 
 ## Features
 
@@ -116,4 +130,8 @@ locally before running the tests.
 
 Follow [these](https://www.rust-lang.org/learn/get-started) instructions to install Rust.
 
-Then you can run `mix test` as long as you have the user privileges to create interfaces.
+Then you can run `mix test` as long as you have the [user privileges to create interfaces](#note-about-privileges).
+
+## Acknowledgments
+
+WireGuard" and the "WireGuard" logo are registered trademarks of Jason A. Donenfeld.
