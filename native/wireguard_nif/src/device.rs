@@ -5,7 +5,7 @@ use std::convert::{TryFrom, TryInto};
 use rustler::{types::atom, Atom, Error, NifResult, NifStruct};
 use wireguard_control::{Backend, Device, DeviceUpdate, InterfaceName, PeerConfigBuilder};
 
-use crate::key::{vec_to_key, NifKey};
+use crate::key;
 use crate::peer::{NifPeerConfig, NifPeerInfo};
 
 #[cfg(target_os = "linux")]
@@ -17,8 +17,8 @@ const BACKEND: Backend = Backend::Userspace;
 #[module = "Wireguardex.Device"]
 struct NifDevice {
     name: String,
-    public_key: Option<NifKey>,
-    private_key: Option<NifKey>,
+    public_key: Option<String>,
+    private_key: Option<String>,
     fwmark: Option<u32>,
     listen_port: Option<u16>,
     peers: Vec<NifPeerInfo>,
@@ -29,8 +29,8 @@ impl From<Device> for NifDevice {
     fn from(d: Device) -> Self {
         Self {
             name: d.name.as_str_lossy().to_string(),
-            public_key: d.public_key.map(|k| k.0.to_vec()),
-            private_key: d.private_key.map(|k| k.0.to_vec()),
+            public_key: d.public_key.map(|k| k.to_base64()),
+            private_key: d.private_key.map(|k| k.to_base64()),
             fwmark: d.fwmark,
             listen_port: d.listen_port,
             peers: d.peers.into_iter().map(|p| p.into()).collect(),
@@ -55,10 +55,10 @@ impl TryFrom<NifDeviceConfig> for DeviceUpdate {
             .collect::<NifResult<Vec<PeerConfigBuilder>>>()?;
 
         if let Some(public_key) = public_key {
-            device = device.set_public_key(vec_to_key(public_key)?);
+            device = device.set_public_key(key::from_base64(&public_key)?);
         }
         if let Some(private_key) = private_key {
-            device = device.set_private_key(vec_to_key(private_key)?);
+            device = device.set_private_key(key::from_base64(&private_key)?);
         }
         if let Some(fwmark) = fwmark {
             device = device.set_fwmark(fwmark);
@@ -77,8 +77,8 @@ impl TryFrom<NifDeviceConfig> for DeviceUpdate {
 #[derive(NifStruct)]
 #[module = "Wireguardex.DeviceConfig"]
 struct NifDeviceConfig {
-    public_key: Option<NifKey>,
-    private_key: Option<NifKey>,
+    public_key: Option<String>,
+    private_key: Option<String>,
     fwmark: Option<u32>,
     listen_port: Option<u16>,
     peers: Vec<NifPeerConfig>,
@@ -122,9 +122,10 @@ fn delete_device(name: &str) -> NifResult<Atom> {
 }
 
 #[rustler::nif]
-fn remove_peer(name: &str, public_key: NifKey) -> NifResult<Atom> {
+fn remove_peer(name: &str, public_key: &str) -> NifResult<Atom> {
     let iname = parse_iname(name)?;
-    let device = DeviceUpdate::new().remove_peer_by_key(&vec_to_key(public_key)?);
+    let key = key::from_base64(public_key)?;
+    let device = DeviceUpdate::new().remove_peer_by_key(&key);
 
     to_term_error(device.apply(&iname, BACKEND))?;
 
