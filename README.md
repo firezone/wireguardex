@@ -104,7 +104,7 @@ config :ruslter_precompiled, :force_build, wireguardex: true
 
 ### Note about privileges
 
-Since this library creates and modify network interfaces the user running this library must have the permissions to do so, by using `setcap` this can be done without sudo by modifying erlang's `beamsmp` cpabilities:
+This library creates and modifies network interfaces. If you'd like to run this library as a non-root user, we recommend adding the `CAP_NET_ADMIN` Linux capability to the Erlang VM executable:
 
 ```sh
 sudo setcap 'cap_net_admin+eip' <erlang_installation_path>/bin/beam.smp
@@ -117,6 +117,8 @@ sudo setcap 'cap_net_admin+eip' $(ls -1 `asdf where erlang 24.3.4`/erts-*/bin/be
 ```
 
 This can be handy for development and testing purposes.
+
+**Note**: This will also give `CAP_NET_ADMIN` to any other Erlang programs using this `beam.smp` executable. If this is undesired, consider using a dedicated Erlang installation or `beam.smp` executable for this library.
 
 ## Features
 
