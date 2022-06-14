@@ -1,6 +1,6 @@
 //! nif bindings for generating wireguard keys
 
-use rustler::NifResult;
+use rustler::{types::atom, NifResult, Atom};
 use wireguard_control::Key;
 
 use crate::device::to_term_error;
@@ -20,10 +20,10 @@ fn generate_preshared_key() -> String {
 }
 
 #[rustler::nif]
-fn get_public_key(key: &str) -> NifResult<String> {
+fn get_public_key(key: &str) -> NifResult<(Atom, String)> {
     let key = from_base64(key)?;
 
-    Ok(key.get_public().to_base64())
+    Ok((atom::ok(), key.get_public().to_base64()))
 }
 
 pub(crate) fn from_base64(key: &str) -> NifResult<Key> {

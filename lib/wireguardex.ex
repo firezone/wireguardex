@@ -1,6 +1,6 @@
 defmodule Wireguardex do
   @moduledoc """
-  Wireguardex is an Elixir library for configuring WireGuard interfaces. It uses
+  Wireguardex is an Elixir library for configuring [WireGuard](https://wireguard.com) interfaces. It uses
   [Rust](https://rust-lang.org) NIFs for performance and safety.
 
   This is the main module, providing the API for interface configuration and
@@ -24,10 +24,10 @@ defmodule Wireguardex do
     ]
 
   @doc """
-  Get a list of interfaces from wireguard.
+  Get a list of interface names of WireGuard devices.
 
   Returns `{:ok, [...]}` if successful. `{:error, error_info}` will be returned
-  if listing the devices fails.
+  if listing device interface names fails.
   """
   def list_devices, do: error()
 
@@ -74,17 +74,20 @@ defmodule Wireguardex do
   def add_peer(_name, _peer), do: error()
 
   @doc """
-  Generates a random private key. It is returned as a base64 string.
+  Generates a random private key. It is returned as a base64 `string`.
   """
   def generate_private_key(), do: error()
 
   @doc """
-  Generates a random preshared key. It is returned as a base64 string.
+  Generates a random preshared key. It is returned as a base64 `string`.
   """
   def generate_preshared_key(), do: error()
 
   @doc """
-  Return a private key's public key as a base64 string.
+  Return a private key's public key as a base64 `string`.
+
+  Returns `{:ok, public_key}` if successful. `{:error, error_info}` will be returned if
+  if getting the public key fails.
   """
   def get_public_key(_private_key), do: error()
 
