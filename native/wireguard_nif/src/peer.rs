@@ -6,14 +6,13 @@ use std::time::SystemTime;
 use rustler::{Error, NifResult, NifStruct};
 use wireguard_control::{AllowedIp, PeerConfig, PeerConfigBuilder, PeerInfo, PeerStats};
 
-use crate::key::vec_to_key;
-use crate::{device::to_term_error, key::NifKey};
+use crate::{device::to_term_error, key};
 
 #[derive(NifStruct)]
 #[module = "Wireguardex.PeerConfig"]
 pub(crate) struct NifPeerConfig {
-    public_key: NifKey,
-    preshared_key: Option<NifKey>,
+    public_key: String,
+    preshared_key: Option<String>,
     endpoint: Option<String>,
     persistent_keepalive_interval: Option<u16>,
     allowed_ips: Vec<String>,
@@ -22,8 +21,8 @@ pub(crate) struct NifPeerConfig {
 impl From<PeerConfig> for NifPeerConfig {
     fn from(config: PeerConfig) -> Self {
         Self {
-            public_key: config.public_key.0.to_vec(),
-            preshared_key: config.preshared_key.map(|k| k.0.to_vec()),
+            public_key: config.public_key.to_base64(),
+            preshared_key: config.preshared_key.map(|k| k.to_base64()),
             endpoint: config.endpoint.map(|e| e.to_string()),
             persistent_keepalive_interval: config.persistent_keepalive_interval,
             allowed_ips: config
@@ -39,7 +38,7 @@ impl TryFrom<NifPeerConfig> for PeerConfigBuilder {
     type Error = Error;
 
     fn try_from(nif_config: NifPeerConfig) -> NifResult<Self> {
-        let public_key = nif_config.public_key;
+        let public_key = key::from_base64(&nif_config.public_key)?;
         let preshared_key = nif_config.preshared_key;
         let endpoint = nif_config.endpoint;
         let persistent_keepalive_interval = nif_config.persistent_keepalive_interval;
@@ -53,10 +52,10 @@ impl TryFrom<NifPeerConfig> for PeerConfigBuilder {
             })
             .collect::<NifResult<Vec<AllowedIp>>>()?;
 
-        let mut config = PeerConfigBuilder::new(&vec_to_key(public_key)?);
+        let mut config = PeerConfigBuilder::new(&public_key);
 
         if let Some(preshared_key) = preshared_key {
-            config = config.set_preshared_key(vec_to_key(preshared_key)?);
+            config = config.set_preshared_key(key::from_base64(&preshared_key)?);
         }
         if let Some(endpoint) = endpoint {
             config = config.set_endpoint(to_term_error(endpoint.parse())?);

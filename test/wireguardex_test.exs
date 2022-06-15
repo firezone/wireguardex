@@ -43,19 +43,18 @@ defmodule WireguardexTest do
 
   test "add peers to device" do
     interface_name = "wg2"
-
-    {:ok, public_key_0} = Wireguardex.get_public_key(Wireguardex.generate_private_key())
-    {:ok, public_key_1} = Wireguardex.get_public_key(Wireguardex.generate_private_key())
+    {:ok, public_key0} = Wireguardex.get_public_key(Wireguardex.generate_private_key())
+    {:ok, public_key1} = Wireguardex.get_public_key(Wireguardex.generate_private_key())
 
     peers = [
       peer_config()
-      |> Wireguardex.PeerConfigBuilder.public_key(public_key_0)
+      |> Wireguardex.PeerConfigBuilder.public_key(public_key0)
       |> preshared_key(Wireguardex.generate_preshared_key())
       |> endpoint("127.0.0.1:1234")
       |> persistent_keepalive_interval(60)
       |> allowed_ips(["192.168.0.0/24", "163.23.42.242/32"]),
       peer_config()
-      |> Wireguardex.PeerConfigBuilder.public_key(public_key_1)
+      |> Wireguardex.PeerConfigBuilder.public_key(public_key1)
       |> preshared_key(Wireguardex.generate_preshared_key())
       |> endpoint("127.0.0.1:1234")
       |> persistent_keepalive_interval(30)
@@ -76,7 +75,6 @@ defmodule WireguardexTest do
 
   test "add peer to device after creation" do
     interface_name = "wg3"
-
     {:ok, public_key} = Wireguardex.get_public_key(Wireguardex.generate_private_key())
 
     peer = %Wireguardex.PeerConfig{
@@ -100,7 +98,6 @@ defmodule WireguardexTest do
 
   test "remove peer to device after creation" do
     interface_name = "wg4"
-
     {:ok, public_key} = Wireguardex.get_public_key(Wireguardex.generate_private_key())
 
     peer = %Wireguardex.PeerConfig{
