@@ -1,6 +1,6 @@
 //! nif bindings for generating wireguard keys
 
-use rustler::{types::atom, NifResult, Atom};
+use rustler::{types::atom, Atom, NifResult};
 use wireguard_control::Key;
 
 use crate::device::to_term_error;

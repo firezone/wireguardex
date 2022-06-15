@@ -87,10 +87,13 @@ struct NifDeviceConfig {
 
 #[rustler::nif]
 fn list_devices() -> NifResult<(Atom, Vec<String>)> {
-    Ok((atom::ok(), to_term_error(Device::list(BACKEND))?
-        .iter()
-        .map(|iname| iname.as_str_lossy().to_string())
-        .collect()))
+    Ok((
+        atom::ok(),
+        to_term_error(Device::list(BACKEND))?
+            .iter()
+            .map(|iname| iname.as_str_lossy().to_string())
+            .collect(),
+    ))
 }
 
 #[rustler::nif]
