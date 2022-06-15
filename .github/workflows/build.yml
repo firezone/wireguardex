@@ -42,9 +42,24 @@ jobs:
               nif: "2.14",
               use-cross: true
             }
-          - { target: x86_64-unknown-linux-gnu, os: ubuntu-18.04, nif: "2.16" }
-          - { target: x86_64-unknown-linux-gnu, os: ubuntu-18.04, nif: "2.15" }
-          - { target: x86_64-unknown-linux-gnu, os: ubuntu-18.04, nif: "2.14" }
+          - { 
+              target: x86_64-unknown-linux-gnu, 
+              os: ubuntu-18.04,
+              nif: "2.16",
+              use-cross: true
+            }
+          - { 
+              target: x86_64-unknown-linux-gnu, 
+              os: ubuntu-18.04,
+              nif: "2.15",
+              use-cross: true
+            }
+          - { 
+              target: x86_64-unknown-linux-gnu, 
+              os: ubuntu-18.04,
+              nif: "2.14",
+              use-cross: true
+            }
 
           # macOS
           - { target: aarch64-apple-darwin, os: macos-11, nif: "2.16" }
