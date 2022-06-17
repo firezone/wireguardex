@@ -62,10 +62,10 @@ peer =
 :ok = Wireguardex.add_peer(interface_name, peer)
 ```
 
-And easily delete it afterwards using its public key:
+And easily remove it afterwards using its public key:
 
 ```elixir
-:ok = Wireguardex.delete_peer(interface_name, public_key)
+:ok = Wireguardex.remove_peer(interface_name, public_key)
 ```
 
 To get information on an existing device:
