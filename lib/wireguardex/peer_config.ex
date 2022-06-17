@@ -5,4 +5,6 @@ defmodule Wireguardex.PeerConfig do
             endpoint: nil,
             persistent_keepalive_interval: nil,
             allowed_ips: []
+
+  @type t :: %__MODULE__{}
 end
