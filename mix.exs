@@ -31,7 +31,8 @@ defmodule Wireguardex.MixProject do
     [
       {:rustler_precompiled, "~> 0.5.1"},
       {:rustler, ">= 0.0.0", optional: true},
-      {:ex_doc, "~> 0.27", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.27", only: :dev, runtime: false},
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
     ]
   end
 

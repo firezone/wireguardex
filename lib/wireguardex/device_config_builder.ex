@@ -22,6 +22,13 @@ defmodule Wireguardex.DeviceConfigBuilder do
   """
 
   @doc """
+  Creates the default configuration to be configured with the provided functions.
+  """
+  def device_config do
+    %Wireguardex.DeviceConfig{}
+  end
+
+  @doc """
   The public encryption key to set on the interface.
   """
   def public_key(config_builder, public_key) do
@@ -62,12 +69,5 @@ defmodule Wireguardex.DeviceConfigBuilder do
   """
   def replace_peers(config_builder, replace_peers) do
     %{config_builder | replace_peers: replace_peers}
-  end
-
-  @doc """
-  Creates the default configuration to be then configured with the provided functions.
-  """
-  def device_config() do
-    %Wireguardex.DeviceConfig{}
   end
 end

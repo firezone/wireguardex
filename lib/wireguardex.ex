@@ -90,14 +90,16 @@ defmodule Wireguardex do
   @doc """
   Generates a random private key. It is returned as a base64 `string`.
   """
+
   @spec generate_private_key() :: key()
-  def generate_private_key(), do: error()
+  def generate_private_key, do: error()
 
   @doc """
   Generates a random preshared key. It is returned as a base64 `string`.
   """
+
   @spec generate_preshared_key() :: key()
-  def generate_preshared_key(), do: error()
+  def generate_preshared_key, do: error()
 
   @doc """
   Return a private key's public key as a base64 `string`.
