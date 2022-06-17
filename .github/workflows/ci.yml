@@ -1,8 +1,5 @@
 ---
-name: Build NIFs
-
-env:
-  NIF_DIRECTORY: "native/wireguard_nif"
+name: CI
 
 on:
   pull_request:
@@ -14,14 +11,108 @@ on:
     tags:
       - "*"
 
-defaults:
-  run:
-    working-directory: "./native/wireguard_nif"
-
 jobs:
-  build_release:
+  static-analysis:
+    runs-on: ubuntu-20.04
+    env:
+      MIX_ENV: dev
+      WIREGUARDNIF_BUILD: true
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: '25'
+          elixir-version: '1.13.4'
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: clippy, rustfmt
+      - uses: actions/cache@v2
+        name: Setup Elixir cache
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-mix-otp-25-${{ hashFiles('**/mix.lock') }}
+      - uses: actions/cache@v2
+        name: Setup Python cache
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+      - uses: actions/cache@v2
+        name: Setup Rust cache
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            native/wireguard_nif/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/native/wireguard_nif/Cargo.lock') }}
+      - name: Install Elixir dependencies
+        run: mix deps.get --only dev
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+      - name: Run pre-commit
+        run: |
+          pre-commit install
+          SKIP=no-commit-to-branch pre-commit run --all-files
+
+  tests:
+    env:
+      MIX_ENV: test
+      WIREGUARDNIF_BUILD: true
+    runs-on: ubuntu-20.04
+    name: "[${{matrix.otp}}/${{matrix.elixir}}] Tests on wireguard_nif [OTP/Elixir]"
+    strategy:
+      fail-fast: false
+      matrix:
+        otp: [22.3, 23.3, 24.3, 25.0]
+        elixir: [1.11.4, 1.12.3, 1.13.4]
+        exclude:
+          - otp: 25
+            elixir: 1.11.4
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+
+      - name: Cache hex deps
+        id: mix-cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            deps
+            _build
+            !_build/*/lib/wireguardex
+          key: ${{ runner.os }}[${{ matrix.otp }}/${{ matrix.elixir }}]-mix-v1-${{ hashFiles('**/mix.lock') }}
+      - run: sudo setcap 'cap_net_admin+eip' $(ls -1 $INSTALL_DIR_FOR_OTP/erts-*/bin/beam.smp)
+      - run: mix local.hex --force
+      - run: mix local.rebar --force
+      - run: mix deps.get
+      - run: mix deps.compile
+      - run: mix compile --warning-as-errors
+        env:
+          RUST_BACKTRACE: 1
+      - run: mix test
+
+  build-release:
     name: NIF ${{ matrix.job.nif }} - ${{ matrix.job.target }} (${{ matrix.job.os }})
     runs-on: ${{ matrix.job.os }}
+    needs:
+      - static-analysis
+      - tests
+    defaults:
+      run:
+        working-directory: "./native/wireguard_nif"
     strategy:
       fail-fast: false
       matrix:
@@ -73,6 +164,7 @@ jobs:
           - { target: x86_64-apple-darwin, os: macos-11, nif: "2.14" }
 
     env:
+      NIF_DIRECTORY: "native/wireguard_nif"
       RUSTLER_NIF_VERSION: ${{ matrix.job.nif }}
     steps:
       - name: Checkout code
