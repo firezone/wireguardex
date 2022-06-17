@@ -48,34 +48,35 @@ fwmark = 1234
 After creation you could also add peers:
 
 ```elixir
-  # Create a peer
-  peer = peer_config()
+# Create a peer
+peer =
+  peer_config()
   |> Wireguardex.PeerConfigBuilder.public_key(public_key)
   |> preshared_key(Wireguardex.generate_preshared_key())
   |> endpoint("127.0.0.1:1234")
   |> persistent_keepalive_interval(30)
   |> allowed_ips(["255.0.0.0/24", "127.0.0.0/16"])
 
-  # Add peer to existing device
-  :ok = Wireguardex.add_peer(interface_name, peer)
+# Add peer to existing device
+:ok = Wireguardex.add_peer(interface_name, peer)
 ```
 
 And easily delete it afterwards using its public key:
 
 ```elixir
-  :ok = Wireguardex.delete_peer(interface_name, public_key)
+:ok = Wireguardex.delete_peer(interface_name, public_key)
 ```
 
 To get information on an existing device:
 
 ```elixir
-  {:ok, device} = Wireguardex.get_device(interface_name)
+{:ok, device} = Wireguardex.get_device(interface_name)
 ```
 
 Finally to delete a device:
 
 ```elixir
-  :ok = Wireguardex.delete_device(interface_name)
+:ok = Wireguardex.delete_device(interface_name)
 ```
 
 ## Installation
