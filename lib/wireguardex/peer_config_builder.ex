@@ -30,7 +30,7 @@ defmodule Wireguardex.PeerConfigBuilder do
   Creates the default peer configuration that you can then specify which each of
   the provided functions.
   """
-  def peer_config() do
+  def peer_config do
     %Wireguardex.PeerConfig{}
   end
 

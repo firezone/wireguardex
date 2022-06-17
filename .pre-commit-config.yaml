@@ -1,0 +1,49 @@
+repos:
+  - repo: local
+    hooks:
+      # Elixir config
+      - id: mix-format
+        name: 'elixir: mix format'
+        entry: mix format --check-formatted
+        language: system
+        files: \.exs*$
+      - id: mix-lint
+        name: 'elixir: mix credo'
+        entry: mix credo --strict
+        language: system
+        pass_filenames: false
+        files: \.exs*$
+      - id: mix-compile
+        name: 'elixir: mix compile'
+        entry: mix compile --force --warnings-as-errors
+        language: system
+        pass_filenames: false
+        files: \.ex$
+      # Rust config
+      - id: rust-format
+        name: 'rust: cargo fmt'
+        entry: bash -c "cd native/wireguard_nif && cargo fmt --all --"
+        language: system
+        pass_filenames: false
+        files: \.rs$
+      - id: rust-lint
+        name: 'rust: cargo clippy'
+        entry: bash -c "cd native/wireguard_nif && cargo clippy --all-targets --all-features -- -D warnings"
+        language: system
+        pass_filenames: false
+        files: \.rs$
+
+  # Standard pre-commit hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+        description: Forces to replace line ending by the UNIX 'lf' character.
+      - id: check-yaml
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-merge-conflict
+      - id: no-commit-to-branch
+        args: [-b, main]

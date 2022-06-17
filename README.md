@@ -134,6 +134,11 @@ Follow [these](https://www.rust-lang.org/learn/get-started) instructions to inst
 
 Then you can run `mix test` as long as you have the [user privileges to create interfaces](#note-about-privileges).
 
+### Pre-commit
+
+We use [pre-commit](https://pre-commit.com) to catch any static analysis issues before code is
+committed. Install with Homebrew: `brew install pre-commit` or pip: `pip install pre-commit`.
+
 ## Acknowledgments
 
 WireGuard" and the "WireGuard" logo are registered trademarks of Jason A. Donenfeld.
