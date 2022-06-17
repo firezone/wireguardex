@@ -13,6 +13,7 @@ This is done by wrapping innernet's [wireguard-control](https://github.com/tonar
 ## Getting started
 
 Add `wireguardex` to your dependencies:
+
 ```elixir
 def deps do
   [
@@ -39,7 +40,7 @@ fwmark = 1234
   device_config() # <-- Start configuring the devices
   # Here we set configuration for the device
   |> private_key(private_key)
-  |> Wireguardex.PeerConfigBuilder.public_key(public_key)
+  |> public_key(public_key)
   |> listen_port(listen_port)
   |> fwmark(fwmark)
   |> set_device(interface_name) # <-- This actually creates the interface
@@ -51,7 +52,7 @@ After creation you could also add peers:
 # Create a peer
 peer =
   peer_config()
-  |> Wireguardex.PeerConfigBuilder.public_key(public_key)
+  |> public_key(public_key)
   |> preshared_key(Wireguardex.generate_preshared_key())
   |> endpoint("127.0.0.1:1234")
   |> persistent_keepalive_interval(30)
