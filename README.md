@@ -6,9 +6,11 @@
 [![hex.pm](https://img.shields.io/hexpm/dt/wireguardex.svg)](https://hex.pm/packages/wireguardex)
 [![hex.pm](https://img.shields.io/hexpm/l/wireguardex.svg)](https://hex.pm/packages/wireguardex)
 
-Elixir library for configuring [WireGuard®](https://www.wireguard.com/) interfaces exposing a native library via NIFs implemented in [Rust](https://rust-lang.org).
+Wireguardex is an Elixir library for configuring [WireGuard®](https://www.wireguard.com/) interfaces.
 
-This is done by wrapping [wireguard-control](https://docs.rs/wireguard-control/latest/wireguard_control/) with [rustler](https://crates.io/crates/rustler).
+It is exposed as a native library via NIFs implemented in [Rust](https://rust-lang.org) using the [rustler](https://crates.io/crates/rustler) and [wireguard-control](https://docs.rs/wireguard-control/latest/wireguard_control/) crates.
+
+Used by [Firezone](https://github.com/firezone/firezone) to manage WireGuard interfaces in Elixir.
 
 ## Getting started
 
@@ -124,8 +126,8 @@ This can be handy for development and testing purposes.
 
 ## Features
 
-* Manage wireguard interfaces
-* Doesn't require a wireguard installation
+* Manage WireGuard interfaces
+* Doesn't require a WireGuard installation
 
 ## Tests
 
