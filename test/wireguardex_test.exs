@@ -11,7 +11,7 @@ defmodule WireguardexTest do
     interface_name = "wg0"
     private_key = Wireguardex.generate_private_key()
     {:ok, public_key} = Wireguardex.get_public_key(private_key)
-    listen_port = 58210
+    listen_port = 58_210
     fwmark = 1234
 
     :ok =
