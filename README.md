@@ -17,7 +17,7 @@ Add `wireguardex` to your dependencies:
 ```elixir
 def deps do
   [
-    {:wireguardex, "~> 0.2.0"}
+    {:wireguardex, "~> 0.3.0"}
   ]
 end
 ```
