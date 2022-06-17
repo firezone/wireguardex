@@ -42,6 +42,7 @@ defmodule Wireguardex.MixProject do
       maintainers: ["Andrew Rousset <andrew@firezone.dev>"],
       licenses: ["Apache-2.0"],
       files: ~w(lib native .formatter.exs README* LICENSE* mix.exs checksum-*.exs),
+      exclude_patterns: [".gitignore"],
       links: %{"GitHub" => @source_url}
     ]
   end
