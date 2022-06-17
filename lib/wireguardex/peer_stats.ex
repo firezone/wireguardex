@@ -12,4 +12,6 @@ defmodule Wireguardex.PeerStats do
   defstruct last_handshake_time: nil,
             rx_bytes: 0,
             tx_bytes: 0
+
+  @type t :: %__MODULE__{}
 end

@@ -22,4 +22,6 @@ defmodule Wireguardex.Device do
             listen_port: nil,
             peers: [],
             linked_name: nil
+
+  @type t :: %__MODULE__{}
 end

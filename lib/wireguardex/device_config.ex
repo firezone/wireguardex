@@ -6,4 +6,6 @@ defmodule Wireguardex.DeviceConfig do
             listen_port: nil,
             peers: [],
             replace_peers: false
+
+  @type t :: %__MODULE__{}
 end

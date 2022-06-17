@@ -12,4 +12,6 @@ defmodule Wireguardex.PeerInfo do
 
   defstruct config: %PeerConfig{},
             stats: %PeerStats{}
+
+  @type t :: %__MODULE__{}
 end
