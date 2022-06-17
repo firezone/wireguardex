@@ -91,7 +91,7 @@ jobs:
             deps
             _build
             !_build/*/lib/wireguardex
-          key: ${{ runner.os }}[${{ matrix.otp }}/${{ matrix.elixir }}]-mix-v1-${{ hashFiles('**/mix.lock')) }}
+          key: ${{ runner.os }}[${{ matrix.otp }}/${{ matrix.elixir }}]-mix-v1-${{ hashFiles('**/mix.lock') }}
       - run: sudo setcap 'cap_net_admin+eip' $(ls -1 $INSTALL_DIR_FOR_OTP/erts-*/bin/beam.smp)
       - run: mix local.hex --force
       - run: mix local.rebar --force
