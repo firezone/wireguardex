@@ -25,7 +25,7 @@ defmodule Wireguardex do
 
   @type device :: Wireguardex.Device.t()
   @type device_config :: Wireguardex.DeviceConfig.t()
-  @type peer_config :: Wireguardex.Peer.t()
+  @type peer_config :: Wireguardex.PeerConfig.t()
   @type peer_stats :: Wireguardex.PeerStats.t()
 
   @type name :: String.t()
@@ -50,7 +50,8 @@ defmodule Wireguardex do
   def get_device(_name), do: error()
 
   @doc """
-  Set a `Device` by its interface name using a `DeviceConfig`.
+  Set a `Device` by its interface name with a config. The config can be generated
+  using a `DeviceConfigBuilder`.
 
   Note if no device is present, a new one will be created for the given interface name.
 
@@ -79,7 +80,8 @@ defmodule Wireguardex do
   def remove_peer(_name, _public_key), do: error()
 
   @doc """
-  Add a peer to a `Device`.
+  Add a peer to a `Device` using a config for the peer. A config can be generated
+  using a `PeerConfigBuilder`.
 
   Returns `:ok` if successful. `{:error, error_info}` will be returned if adding
   the peer to the device fails.
@@ -90,14 +92,12 @@ defmodule Wireguardex do
   @doc """
   Generates a random private key. It is returned as a base64 `string`.
   """
-
   @spec generate_private_key() :: key()
   def generate_private_key, do: error()
 
   @doc """
   Generates a random preshared key. It is returned as a base64 `string`.
   """
-
   @spec generate_preshared_key() :: key()
   def generate_preshared_key, do: error()
 
@@ -107,7 +107,7 @@ defmodule Wireguardex do
   Returns `{:ok, public_key}` if successful. `{:error, error_info}` will be returned if
   if getting the public key fails.
   """
-  @spec get_public_key(key()) :: key()
+  @spec get_public_key(key()) :: key() | {:error, String.t()}
   def get_public_key(_private_key), do: error()
 
   defp error, do: :erlang.nif_error(:nif_not_loaded)
