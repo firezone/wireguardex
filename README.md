@@ -138,4 +138,4 @@ Then you can run `mix test` as long as you have the [user privileges to create i
 
 ## Acknowledgments
 
-WireGuard" and the "WireGuard" logo are registered trademarks of Jason A. Donenfeld.
+"WireGuard" and the "WireGuard" logo are registered trademarks of Jason A. Donenfeld.
