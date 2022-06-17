@@ -8,7 +8,7 @@
 
 Elixir library for configuring [WireGuard®](https://www.wireguard.com/) interfaces exposing a native library via NIFs implemented in [Rust](https://rust-lang.org).
 
-This is done by wrapping innernet's [wireguard-control](https://github.com/tonarino/innernet/tree/main/wireguard-control) with [rustler](https://crates.io/crates/rustler).
+This is done by wrapping [wireguard-control](https://docs.rs/wireguard-control/latest/wireguard_control/) with [rustler](https://crates.io/crates/rustler).
 
 ## Getting started
 
