@@ -103,7 +103,7 @@ To force compiliation you can set the environment variable `WIREGUARDNIF_BUILD`
 to `true` or `1`. Or you can set the application env to force the NIF to compile:
 
 ```elixir
-config :ruslter_precompiled, :force_build, wireguardex: true
+config :rustler_precompiled, :force_build, wireguardex: true
 ```
 
 ### Note about privileges
