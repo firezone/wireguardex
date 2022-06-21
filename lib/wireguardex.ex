@@ -107,7 +107,7 @@ defmodule Wireguardex do
   Returns `{:ok, public_key}` if successful. `{:error, error_info}` will be returned if
   if getting the public key fails.
   """
-  @spec get_public_key(key()) :: key() | {:error, String.t()}
+  @spec get_public_key(key()) :: {:ok, key()} | {:error, String.t()}
   def get_public_key(_private_key), do: error()
 
   defp error, do: :erlang.nif_error(:nif_not_loaded)
