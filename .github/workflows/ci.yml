@@ -131,6 +131,42 @@ jobs:
         job:
           # Linux
           - {
+              target: aarch64-unknown-linux-musl,
+              os: ubuntu-18.04,
+              nif: "2.16",
+              use-cross: true
+            }
+          - {
+              target: aarch64-unknown-linux-musl,
+              os: ubuntu-18.04,
+              nif: "2.15",
+              use-cross: true
+            }
+          - {
+              target: aarch64-unknown-linux-musl,
+              os: ubuntu-18.04,
+              nif: "2.14",
+              use-cross: true
+            }
+          - {
+              target: x86_64-unknown-linux-musl,
+              os: ubuntu-18.04,
+              nif: "2.16",
+              use-cross: true
+            }
+          - {
+              target: x86_64-unknown-linux-musl,
+              os: ubuntu-18.04,
+              nif: "2.15",
+              use-cross: true
+            }
+          - {
+              target: x86_64-unknown-linux-musl,
+              os: ubuntu-18.04,
+              nif: "2.14",
+              use-cross: true
+            }
+          - {
               target: aarch64-unknown-linux-gnu,
               os: ubuntu-18.04,
               nif: "2.16",
@@ -184,12 +220,10 @@ jobs:
 
       - name: Install arm64 gcc
         shell: bash
+        if: ${{ matrix.job.target == 'aarch64-unknown-linux-gnu' }}
         run: |
-          case ${{ matrix.job.target }} in
-            aarch64-unknown-linux-gnu)
-              sudo apt-get -y update
-              sudo apt-get -y install gcc-aarch64-linux-gnu ;;
-          esac
+          sudo apt-get -y update
+          sudo apt-get -y install gcc-aarch64-linux-gnu
 
       - name: Install Rust
         uses: actions-rs/toolchain@v1
