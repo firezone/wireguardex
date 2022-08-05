@@ -134,7 +134,7 @@ jobs:
               target: aarch64-unknown-linux-musl,
               os: ubuntu-18.04,
               nif: "2.16",
-              use-cross: false
+              use-cross: true
             }
           - {
               target: aarch64-unknown-linux-musl,
@@ -239,7 +239,7 @@ jobs:
         with:
           binary: "cross"
           version: "v0.2.1"
-          download_url: "https://github.com/cross-rs/cross/releases/download/${version}/cross-${version}-x86_64-unknown-linux-gnu.tar.gz"
+          download_url: "https://github.com/cross-rs/cross/releases/download/${version}/cross-${version}-${{ matrix.job.target }}.tar.gz"
           tarball_binary_path: "${binary}"
           smoke_test: "${binary} --version"
 
