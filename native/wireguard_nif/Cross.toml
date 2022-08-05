@@ -2,7 +2,9 @@
 image = "ghcr.io/cross-rs/x86_64-unknown-linux-gnu:main-centos"
 
 [target.x86_64-unknown-linux-musl]
-image = "ghcr.io/cross-rs/x86_64-unknown-linux-musl:main-centos"
+passthrough = [
+  "RUSTFLAGS='-C target-feature=-crt-static'"
+]
 
 [build.env]
 passthrough = [
