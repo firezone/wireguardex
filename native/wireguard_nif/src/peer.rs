@@ -8,7 +8,8 @@ use wireguard_control::{AllowedIp, PeerConfig, PeerConfigBuilder, PeerInfo, Peer
 
 use crate::{device::to_term_error, key};
 
-#[allow(clippy::extra_unused_lifetimes)] #[derive(NifStruct)]
+#[allow(clippy::extra_unused_lifetimes)] 
+#[derive(NifStruct)]
 #[module = "Wireguardex.PeerConfig"]
 pub(crate) struct NifPeerConfig {
     public_key: String,
@@ -70,7 +71,8 @@ impl TryFrom<NifPeerConfig> for PeerConfigBuilder {
     }
 }
 
-#[allow(clippy::extra_unused_lifetimes)] #[derive(NifStruct)]
+#[allow(clippy::extra_unused_lifetimes)] 
+#[derive(NifStruct)]
 #[module = "Wireguardex.PeerInfo"]
 pub(crate) struct NifPeerInfo {
     config: NifPeerConfig,
@@ -86,7 +88,8 @@ impl From<PeerInfo> for NifPeerInfo {
     }
 }
 
-#[allow(clippy::extra_unused_lifetimes)] #[derive(NifStruct)]
+#[allow(clippy::extra_unused_lifetimes)] 
+#[derive(NifStruct)]
 #[module = "Wireguardex.PeerStats"]
 struct NifPeerStats {
     last_handshake_time: Option<u64>,
