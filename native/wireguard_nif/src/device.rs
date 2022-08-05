@@ -2,7 +2,7 @@
 
 // XXX: Disable false positive detection of extra_unused_lifetimes
 // See https://github.com/rusterlium/rustler/issues/470
-#![allow(clippy::extra_unused_lifetimes)] 
+#![allow(clippy::extra_unused_lifetimes)]
 use std::convert::{TryFrom, TryInto};
 
 use rustler::{types::atom, Atom, Error, NifResult, NifStruct};
