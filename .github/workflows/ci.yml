@@ -152,19 +152,19 @@ jobs:
               target: x86_64-unknown-linux-musl,
               os: ubuntu-18.04,
               nif: "2.16",
-              use-cross: false
+              use-cross: true
             }
           - {
               target: x86_64-unknown-linux-musl,
               os: ubuntu-18.04,
               nif: "2.15",
-              use-cross: false
+              use-cross: true
             }
           - {
               target: x86_64-unknown-linux-musl,
               os: ubuntu-18.04,
               nif: "2.14",
-              use-cross: false
+              use-cross: true
             }
           - {
               target: aarch64-unknown-linux-gnu,
@@ -188,19 +188,19 @@ jobs:
               target: x86_64-unknown-linux-gnu,
               os: ubuntu-18.04,
               nif: "2.16",
-              use-cross: false
+              use-cross: true
             }
           - {
               target: x86_64-unknown-linux-gnu,
               os: ubuntu-18.04,
               nif: "2.15",
-              use-cross: false
+              use-cross: true
             }
           - {
               target: x86_64-unknown-linux-gnu,
               os: ubuntu-18.04,
               nif: "2.14",
-              use-cross: false
+              use-cross: true
             }
 
           # macOS
@@ -254,6 +254,7 @@ jobs:
         if: ${{ matrix.job.use-cross }}
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_RUSTFLAGS: '-C target-feature=-crt-static'
+          CARGO_TARGET_x86_64_UNKNOWN_LINUX_MUSL_RUSTFLAGS: '-C target-feature=-crt-static'
         run: cross build --release --target=${{ matrix.job.target }}
 
       - name: Build with Cargo
