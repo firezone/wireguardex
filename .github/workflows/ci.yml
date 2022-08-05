@@ -250,12 +250,14 @@ jobs:
           echo "PROJECT_VERSION=$(sed -n 's/^  @version "\(.*\)"/\1/p' ../../mix.exs | head -n1)" >> $GITHUB_ENV
 
       - name: Build with Cross
-        shell: bash
+        env:
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_RUSTFLAGS: "-C target-feature=-crt-static"
+          CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_RUSTFLAGS: "-C target-feature=-crt-static"
         if: ${{ matrix.job.use-cross }}
         run: |
           export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_RUSTFLAGS="-C target-feature=-crt-static"
           export CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_RUSTFLAGS="-C target-feature=-crt-static"
-          cross build --release --target=${{ matrix.job.target }}
+          cross build --release --target=${{ matrix.job.target }} -- -C target-feature=-crt-static
 
       - name: Build with Cargo
         shell: bash
