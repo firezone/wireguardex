@@ -134,19 +134,19 @@ jobs:
               target: aarch64-unknown-linux-musl,
               os: ubuntu-18.04,
               nif: "2.16",
-              use-cross: false
+              use-cross: true
             }
           - {
               target: aarch64-unknown-linux-musl,
               os: ubuntu-18.04,
               nif: "2.15",
-              use-cross: false
+              use-cross: true
             }
           - {
               target: aarch64-unknown-linux-musl,
               os: ubuntu-18.04,
               nif: "2.14",
-              use-cross: false
+              use-cross: true
             }
           - {
               target: x86_64-unknown-linux-musl,
@@ -188,19 +188,19 @@ jobs:
               target: x86_64-unknown-linux-gnu,
               os: ubuntu-18.04,
               nif: "2.16",
-              use-cross: true
+              use-cross: false
             }
           - {
               target: x86_64-unknown-linux-gnu,
               os: ubuntu-18.04,
               nif: "2.15",
-              use-cross: true
+              use-cross: false
             }
           - {
               target: x86_64-unknown-linux-gnu,
               os: ubuntu-18.04,
               nif: "2.14",
-              use-cross: true
+              use-cross: false
             }
 
           # macOS
@@ -249,14 +249,18 @@ jobs:
           echo "PROJECT_NAME=$(sed -n 's/^name = "\(.*\)"/\1/p' Cargo.toml | head -n1)" >> $GITHUB_ENV
           echo "PROJECT_VERSION=$(sed -n 's/^  @version "\(.*\)"/\1/p' ../../mix.exs | head -n1)" >> $GITHUB_ENV
 
-      - name: Build
+      - name: Build with Cross
         shell: bash
-        run: |
-          if [ "${{ matrix.job.use-cross }}" == "true" ]; then
-            cross build --release --target=${{ matrix.job.target }}
-          else
-            cargo build --release --target=${{ matrix.job.target }}
-          fi
+        if: ${{ matrix.job.use-cross }}
+        env:
+          CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_RUSTFLAGS: '-C target-feature=-crt-static'
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_RUSTFLAGS: '-C target-feature=-crt-static'
+        run: cross build --release --target=${{ matrix.job.target }}
+
+      - name: Build with Cargo
+        shell: bash
+        if: ${{ ! matrix.job.use-cross }}
+        run: cargo build --release --target=${{ matrix.job.target }}
 
       - name: Rename lib
         id: rename
