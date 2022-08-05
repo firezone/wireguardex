@@ -134,7 +134,7 @@ jobs:
               target: aarch64-unknown-linux-musl,
               os: ubuntu-18.04,
               nif: "2.16",
-              use-cross: true
+              use-cross: false
             }
           - {
               target: aarch64-unknown-linux-musl,
