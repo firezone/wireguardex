@@ -13,7 +13,7 @@ const BACKEND: Backend = Backend::Kernel;
 #[cfg(not(target_os = "linux"))]
 const BACKEND: Backend = Backend::Userspace;
 
-#[derive(NifStruct)]
+#[allow(clippy::extra_unused_lifetimes)] #[derive(NifStruct)]
 #[module = "Wireguardex.Device"]
 struct NifDevice {
     name: String,
@@ -74,7 +74,7 @@ impl TryFrom<NifDeviceConfig> for DeviceUpdate {
     }
 }
 
-#[derive(NifStruct)]
+#[allow(clippy::extra_unused_lifetimes)] #[derive(NifStruct)]
 #[module = "Wireguardex.DeviceConfig"]
 struct NifDeviceConfig {
     public_key: Option<String>,
