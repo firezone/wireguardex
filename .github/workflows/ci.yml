@@ -132,73 +132,73 @@ jobs:
           # Linux
           - {
               target: aarch64-unknown-linux-musl,
-              os: ubuntu-18.04,
+              os: ubuntu-latest,
               nif: "2.16",
               use-cross: true
             }
           - {
               target: aarch64-unknown-linux-musl,
-              os: ubuntu-18.04,
+              os: ubuntu-latest,
               nif: "2.15",
               use-cross: true
             }
           - {
               target: aarch64-unknown-linux-musl,
-              os: ubuntu-18.04,
+              os: ubuntu-latest,
               nif: "2.14",
               use-cross: true
             }
           - {
               target: x86_64-unknown-linux-musl,
-              os: ubuntu-18.04,
+              os: ubuntu-latest,
               nif: "2.16",
               use-cross: true
             }
           - {
               target: x86_64-unknown-linux-musl,
-              os: ubuntu-18.04,
+              os: ubuntu-latest,
               nif: "2.15",
               use-cross: true
             }
           - {
               target: x86_64-unknown-linux-musl,
-              os: ubuntu-18.04,
+              os: ubuntu-latest,
               nif: "2.14",
               use-cross: true
             }
           - {
               target: aarch64-unknown-linux-gnu,
-              os: ubuntu-18.04,
+              os: ubuntu-latest,
               nif: "2.16",
               use-cross: true
             }
           - {
               target: aarch64-unknown-linux-gnu,
-              os: ubuntu-18.04,
+              os: ubuntu-latest,
               nif: "2.15",
               use-cross: true
             }
           - {
               target: aarch64-unknown-linux-gnu,
-              os: ubuntu-18.04,
+              os: ubuntu-latest,
               nif: "2.14",
               use-cross: true
             }
           - {
               target: x86_64-unknown-linux-gnu,
-              os: ubuntu-18.04,
+              os: ubuntu-latest,
               nif: "2.16",
               use-cross: true
             }
           - {
               target: x86_64-unknown-linux-gnu,
-              os: ubuntu-18.04,
+              os: ubuntu-latest,
               nif: "2.15",
               use-cross: true
             }
           - {
               target: x86_64-unknown-linux-gnu,
-              os: ubuntu-18.04,
+              os: ubuntu-latest,
               nif: "2.14",
               use-cross: true
             }
