@@ -1,5 +1,8 @@
 //! nif bindings for wireguard peers
 
+// XXX: Disable false positive detection of extra_unused_lifetimes
+// See https://github.com/rusterlium/rustler/issues/470
+#![allow(clippy::extra_unused_lifetimes)]
 use std::convert::TryFrom;
 use std::time::SystemTime;
 

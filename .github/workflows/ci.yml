@@ -118,8 +118,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-release-nifs:
-    name: NIF ${{ matrix.job.nif }} - ${{ matrix.job.target }} (${{ matrix.job.os }})
-    runs-on: ${{ matrix.job.os }}
+    name: NIF ${{ matrix.nif }} - ${{ matrix.target }} (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     needs:
       - draft-release
     defaults:
@@ -128,84 +128,58 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        job:
-          # Linux
-          - {
-              target: aarch64-unknown-linux-gnu,
-              os: ubuntu-18.04,
-              nif: "2.16",
-              use-cross: true
-            }
-          - {
-              target: aarch64-unknown-linux-gnu,
-              os: ubuntu-18.04,
-              nif: "2.15",
-              use-cross: true
-            }
-          - {
-              target: aarch64-unknown-linux-gnu,
-              os: ubuntu-18.04,
-              nif: "2.14",
-              use-cross: true
-            }
-          - {
-              target: x86_64-unknown-linux-gnu,
-              os: ubuntu-18.04,
-              nif: "2.16",
-              use-cross: true
-            }
-          - {
-              target: x86_64-unknown-linux-gnu,
-              os: ubuntu-18.04,
-              nif: "2.15",
-              use-cross: true
-            }
-          - {
-              target: x86_64-unknown-linux-gnu,
-              os: ubuntu-18.04,
-              nif: "2.14",
-              use-cross: true
-            }
+        target:
+          - aarch64-unknown-linux-gnu
+          - aarch64-unknown-linux-musl
+          - x86_64-unknown-linux-gnu
+          - x86_64-unknown-linux-musl
+          - aarch64-apple-darwin
+          - x86_64-apple-darwin
+        os:
+          - ubuntu-20.04
+          - macos-11
+        nif:
+          - "2.14"
+          - "2.15"
+          - "2.16"
 
-          # macOS
-          - { target: aarch64-apple-darwin, os: macos-11, nif: "2.16" }
-          - { target: aarch64-apple-darwin, os: macos-11, nif: "2.15" }
-          - { target: aarch64-apple-darwin, os: macos-11, nif: "2.14" }
-          - { target: x86_64-apple-darwin, os: macos-11, nif: "2.16" }
-          - { target: x86_64-apple-darwin, os: macos-11, nif: "2.15" }
-          - { target: x86_64-apple-darwin, os: macos-11, nif: "2.14" }
+        # Exclude combinations of build OSes and targets that don't make sense
+        exclude:
+          - os: macos-11
+            target: aarch64-unknown-linux-gnu
+          - os: macos-11
+            target: aarch64-unknown-linux-musl
+          - os: macos-11
+            target: x86_64-unknown-linux-gnu
+          - os: macos-11
+            target: x86_64-unknown-linux-musl
+          - os: ubuntu-20.04
+            target: aarch64-apple-darwin
+          - os: ubuntu-20.04
+            target: x86_64-apple-darwin
 
     env:
       NIF_DIRECTORY: "native/wireguard_nif"
-      RUSTLER_NIF_VERSION: ${{ matrix.job.nif }}
+      RUSTLER_NIF_VERSION: ${{ matrix.nif }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Install arm64 gcc
-        shell: bash
-        run: |
-          case ${{ matrix.job.target }} in
-            aarch64-unknown-linux-gnu)
-              sudo apt-get -y update
-              sudo apt-get -y install gcc-aarch64-linux-gnu ;;
-          esac
 
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          target: ${{ matrix.job.target }}
+          target: ${{ matrix.target }}
           override: true
           profile: minimal
 
       - name: Install cross
         uses: giantswarm/install-binary-action@v1.0.0
-        if: ${{ matrix.job.use-cross }}
+        if: ${{ contains(matrix.os, 'ubuntu') }}
         with:
           binary: "cross"
-          version: "v0.2.1"
-          download_url: "https://github.com/cross-rs/cross/releases/download/${version}/cross-${version}-x86_64-unknown-linux-gnu.tar.gz"
+          version: "v0.2.4"
+          download_url: "https://github.com/cross-rs/cross/releases/download/${version}/cross-x86_64-unknown-linux-gnu.tar.gz"
           tarball_binary_path: "${binary}"
           smoke_test: "${binary} --version"
 
@@ -215,14 +189,14 @@ jobs:
           echo "PROJECT_NAME=$(sed -n 's/^name = "\(.*\)"/\1/p' Cargo.toml | head -n1)" >> $GITHUB_ENV
           echo "PROJECT_VERSION=$(sed -n 's/^  @version "\(.*\)"/\1/p' ../../mix.exs | head -n1)" >> $GITHUB_ENV
 
-      - name: Build
+      - name: Build with Cross
+        if: ${{ contains(matrix.os, 'ubuntu') }}
+        run: cross build --release --target=${{ matrix.target }}
+
+      - name: Build with Cargo
         shell: bash
-        run: |
-          if [ "${{ matrix.job.use-cross }}" == "true" ]; then
-            cross build --release --target=${{ matrix.job.target }}
-          else
-            cargo build --release --target=${{ matrix.job.target }}
-          fi
+        if: ${{ ! contains(matrix.os, 'ubuntu') }}
+        run: cargo build --release --target=${{ matrix.target }}
 
       - name: Rename lib
         id: rename
@@ -231,7 +205,7 @@ jobs:
           LIB_PREFIX="lib"
           LIB_SUFFIX=".so"
 
-          case ${{ matrix.job.target }} in
+          case ${{ matrix.target }} in
             *-apple-darwin) LIB_SUFFIX=".dylib" ;;
           esac;
 
@@ -242,16 +216,16 @@ jobs:
           LIB_NAME="${LIB_PREFIX}${{ env.PROJECT_NAME }}${LIB_SUFFIX}"
           LIB_PATH="${LIB_DIR}/${LIB_NAME}"
 
-          cp "target/${{ matrix.job.target }}/release/${LIB_NAME}" "${LIB_DIR}"
+          cp "target/${{ matrix.target }}/release/${LIB_NAME}" "${LIB_DIR}"
 
           # Use ".so" for macOS
           # See: https://www.erlang.org/doc/man/erlang.html#load_nif-2
           LIB_FINAL_SUFFIX="${LIB_SUFFIX}"
-          case ${{ matrix.job.target }} in
+          case ${{ matrix.target }} in
             *-apple-darwin) LIB_FINAL_SUFFIX=".so" ;;
           esac;
 
-          LIB_FINAL_NAME="${LIB_PREFIX}${PROJECT_NAME}-v${PROJECT_VERSION}-nif-${RUSTLER_NIF_VERSION}-${{ matrix.job.target }}${LIB_FINAL_SUFFIX}"
+          LIB_FINAL_NAME="${LIB_PREFIX}${PROJECT_NAME}-v${PROJECT_VERSION}-nif-${RUSTLER_NIF_VERSION}-${{ matrix.target }}${LIB_FINAL_SUFFIX}"
 
           # Copy lib to final name
           cp "${LIB_PATH}" "${LIB_FINAL_NAME}"
