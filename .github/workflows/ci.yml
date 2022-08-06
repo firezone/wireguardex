@@ -214,8 +214,6 @@ jobs:
     env:
       NIF_DIRECTORY: "native/wireguard_nif"
       RUSTLER_NIF_VERSION: ${{ matrix.job.nif }}
-      CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_RUSTFLAGS: "-C target-feature=-crt-static"
-      CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_RUSTFLAGS: "-C target-feature=-crt-static"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
