@@ -214,6 +214,8 @@ jobs:
     env:
       NIF_DIRECTORY: "native/wireguard_nif"
       RUSTLER_NIF_VERSION: ${{ matrix.job.nif }}
+      CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_RUSTFLAGS: "-C target-feature=-crt-static"
+      CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_RUSTFLAGS: "-C target-feature=-crt-static"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -250,14 +252,8 @@ jobs:
           echo "PROJECT_VERSION=$(sed -n 's/^  @version "\(.*\)"/\1/p' ../../mix.exs | head -n1)" >> $GITHUB_ENV
 
       - name: Build with Cross
-        env:
-          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_RUSTFLAGS: "-C target-feature=-crt-static"
-          CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_RUSTFLAGS: "-C target-feature=-crt-static"
         if: ${{ matrix.job.use-cross }}
-        run: |
-          export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_RUSTFLAGS="-C target-feature=-crt-static"
-          export CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_RUSTFLAGS="-C target-feature=-crt-static"
-          cross build --release --target=${{ matrix.job.target }}
+        run: cross build --release --target=${{ matrix.job.target }}
 
       - name: Build with Cargo
         shell: bash
