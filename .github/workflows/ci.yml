@@ -136,7 +136,7 @@ jobs:
           - aarch64-apple-darwin
           - x86_64-apple-darwin
         os:
-          - ubuntu-20.04
+          - ubuntu-18.04
           - macos-11
         nif:
           - "2.14"
