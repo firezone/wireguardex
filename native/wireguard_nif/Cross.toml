@@ -1,11 +1,6 @@
-[target.x86_64-unknown-linux-gnu]
-image = "ghcr.io/cross-rs/x86_64-unknown-linux-gnu:main-centos"
-
-[target.aarch64-unknown-linux-gnu]
-image = "ghcr.io/cross-rs/x86_64-unknown-linux-gnu:main-centos"
-pre-build = [
-  "sudo yum install -y gcc-aarch64-linux-gnu"
-]
+[build]
+# This allows us to build targets against GLIBC 2.17 from any host
+zig = "2.17"
 
 [build.env]
 passthrough = [
