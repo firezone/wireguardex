@@ -1,4 +1,8 @@
-[build]
+[target.x86_64-unknown-linux-gnu]
+# This allows us to build targets against GLIBC 2.17 from any host
+zig = "2.17"
+
+[target.aarch64-unknown-linux-gnu]
 # This allows us to build targets against GLIBC 2.17 from any host
 zig = "2.17"
 
