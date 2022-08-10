@@ -174,14 +174,9 @@ jobs:
           profile: minimal
 
       - name: Install cross
-        uses: giantswarm/install-binary-action@v1.0.0
         if: ${{ contains(matrix.os, 'ubuntu') }}
-        with:
-          binary: "cross"
-          version: "v0.2.4"
-          download_url: "https://github.com/cross-rs/cross/releases/download/${version}/cross-x86_64-unknown-linux-gnu.tar.gz"
-          tarball_binary_path: "${binary}"
-          smoke_test: "${binary} --version"
+        # Use main cross-rs to have Zig support
+        run: cargo install cross --git https://github.com/cross-rs/cross --locked
 
       - name: Extract project info
         shell: bash
