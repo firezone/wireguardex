@@ -39,7 +39,8 @@ defmodule Wireguardex.MixProject do
   defp package do
     [
       description: "An Elixir library for configuring WireGuard interfaces via NIFs in Rust",
-      maintainers: ["Andrew Rousset <andrew@firezone.dev>"],
+      organization: "firezonehq",
+      maintainers: ["Jamil Bou Kheir <jamil@firezone.dev>"],
       licenses: ["Apache-2.0"],
       files: ~w(lib native .formatter.exs README* LICENSE* mix.exs checksum-*.exs),
       exclude_patterns: [".gitignore"],
