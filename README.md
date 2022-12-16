@@ -19,7 +19,7 @@ Add `wireguardex` to your dependencies:
 ```elixir
 def deps do
   [
-    {:wireguardex, "~> 0.3.5"}
+    {:wireguardex, "~> 0.3"}
   ]
 end
 ```
@@ -90,7 +90,7 @@ in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:wireguardex, "~> 0.3.5"}
+    {:wireguardex, "~> 0.3"}
   ]
 end
 ```
