@@ -4,7 +4,7 @@ defmodule Wireguardex.PeerConfigBuilder do
   a peer's configuration of persistent attributes. They do not change over
   time and are part of the configuration of a device.
 
-  To create the defualt config use `peer_config/0` then you can apply each
+  To create the default config use `peer_config/0` then you can apply each
   function in this module to specify the config.
 
   ## Examples
