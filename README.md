@@ -99,7 +99,7 @@ Wireguardex will try to download a precompiled NIF library. If you want to compi
 your own NIF, you'll need to have Rust installed. The common option is to use
 [Rustup](https://rustup.rs/).
 
-To force compiliation you can set the environment variable `WIREGUARDNIF_BUILD`
+To force compilation you can set the environment variable `WIREGUARDNIF_BUILD`
 to `true` or `1`. Or you can set the application env to force the NIF to compile:
 
 ```elixir

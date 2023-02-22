@@ -47,3 +47,9 @@ repos:
       - id: check-merge-conflict
       - id: no-commit-to-branch
         args: [-b, main]
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.2
+    hooks:
+      - id: codespell
+        args: [-S, 'deps,_build', -L, crate]
