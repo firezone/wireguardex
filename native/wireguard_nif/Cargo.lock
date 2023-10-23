@@ -406,7 +406,7 @@ dependencies = [
 
 [[package]]
 name = "wireguard_nif"
-version = "0.3.6"
+version = "0.3.7"
 dependencies = [
  "rustler",
  "wireguard-control",
