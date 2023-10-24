@@ -145,9 +145,9 @@ jobs:
           - ubuntu-20.04
           - macos-11
         nif:
-          - "2.14"
           - "2.15"
           - "2.16"
+          - "2.17"
 
         # Exclude combinations of build OSes and targets that don't make sense
         exclude:
