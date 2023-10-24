@@ -2,7 +2,7 @@ defmodule Wireguardex.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/firezone/wireguardex"
-  @version "0.3.6"
+  @version "0.4.0"
 
   def project do
     [
@@ -29,7 +29,7 @@ defmodule Wireguardex.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:rustler_precompiled, "~> 0.5.1"},
+      {:rustler_precompiled, "~> 0.7.0"},
       {:rustler, ">= 0.0.0", optional: true},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
