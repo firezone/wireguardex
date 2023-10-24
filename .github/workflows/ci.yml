@@ -24,8 +24,8 @@ jobs:
           python-version: '3.9'
       - uses: erlef/setup-beam@v1
         with:
-          otp-version: 25
-          elixir-version: 1.14
+          otp-version: 26
+          elixir-version: 1.15
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
@@ -68,15 +68,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        otp: [22, 23, 24, 25]
-        elixir: [1.11, 1.12, 1.13, 1.14]
+        otp: [22, 23, 24, 25, 26]
+        elixir: [1.13, 1.14, 1.15]
         exclude:
+          - otp: 26
+            elixir: 1.13
           - otp: 22
             elixir: 1.14
-          - otp: 25
-            elixir: 1.11
-          - otp: 25
-            elixir: 1.12
+          - otp: 22
+            elixir: 1.15
+          - otp: 23
+            elixir: 1.15
     steps:
       - uses: actions/checkout@v2
         with:
@@ -143,9 +145,9 @@ jobs:
           - ubuntu-20.04
           - macos-11
         nif:
-          - "2.14"
           - "2.15"
           - "2.16"
+          - "2.17"
 
         # Exclude combinations of build OSes and targets that don't make sense
         exclude:
