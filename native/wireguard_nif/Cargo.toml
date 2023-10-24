@@ -10,6 +10,6 @@ path = "src/lib.rs"
 crate-type = ["cdylib"]
 
 [dependencies]
-rustler = "0.25"
+rustler = "0.30"
 # wireguard-control 1.5.4 release on github instead of crates.io
 wireguard-control = { git = "https://github.com/tonarino/innernet", rev = "a6c918a581bc66824ca29e6c84be902f995d9726" }
