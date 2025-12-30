@@ -126,6 +126,8 @@ jobs:
     steps:
       - uses: release-drafter/release-drafter@7cf306f56b79636bb76931494ccf29fc893763bd # v6.1.0
         id: release_drafter
+        with:
+          commitish: main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -240,8 +242,8 @@ jobs:
 
           LIB_FINAL_PATH="${NIF_DIRECTORY}/${LIB_FINAL_NAME}.tar.gz"
 
-          echo ::set-output name=LIB_FINAL_PATH::${LIB_FINAL_PATH}
-          echo ::set-output name=LIB_FINAL_NAME::${LIB_FINAL_NAME}.tar.gz
+          echo "LIB_FINAL_PATH=${LIB_FINAL_PATH}" >> $GITHUB_OUTPUT
+          echo "LIB_FINAL_NAME=${LIB_FINAL_NAME}.tar.gz" >> $GITHUB_OUTPUT
 
       - name: Upload release
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
