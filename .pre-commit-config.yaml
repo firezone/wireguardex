@@ -3,31 +3,31 @@ repos:
     hooks:
       # Elixir config
       - id: mix-format
-        name: 'elixir: mix format'
+        name: "elixir: mix format"
         entry: mix format --check-formatted
         language: system
         files: \.exs*$
       - id: mix-lint
-        name: 'elixir: mix credo'
+        name: "elixir: mix credo"
         entry: mix credo --strict
         language: system
         pass_filenames: false
         files: \.exs*$
       - id: mix-compile
-        name: 'elixir: mix compile'
+        name: "elixir: mix compile"
         entry: mix compile --force --warnings-as-errors
         language: system
         pass_filenames: false
         files: \.ex$
       # Rust config
       - id: rust-format
-        name: 'rust: cargo fmt'
+        name: "rust: cargo fmt"
         entry: bash -c "cd native/wireguard_nif && cargo fmt --all --"
         language: system
         pass_filenames: false
         files: \.rs$
       - id: rust-lint
-        name: 'rust: cargo clippy'
+        name: "rust: cargo clippy"
         entry: bash -c "cd native/wireguard_nif && cargo clippy --all-targets --all-features -- -D warnings"
         language: system
         pass_filenames: false
@@ -38,7 +38,7 @@ repos:
     rev: v2.3.0
     hooks:
       - id: mixed-line-ending
-        args: ['--fix=lf']
+        args: ["--fix=lf"]
         description: Forces to replace line ending by the UNIX 'lf' character.
       - id: check-yaml
       - id: check-merge-conflict
@@ -47,9 +47,3 @@ repos:
       - id: check-merge-conflict
       - id: no-commit-to-branch
         args: [-b, main]
-
-  - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.2
-    hooks:
-      - id: codespell
-        args: [-S, 'deps,_build', -L, crate]

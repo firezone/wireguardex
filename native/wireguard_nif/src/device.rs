@@ -89,7 +89,7 @@ struct NifDeviceConfig {
 }
 
 #[rustler::nif]
-fn list_devices() -> NifResult<(Atom, Vec<String>)> {
+pub fn list_devices() -> NifResult<(Atom, Vec<String>)> {
     Ok((
         atom::ok(),
         to_term_error(Device::list(BACKEND))?
@@ -100,7 +100,7 @@ fn list_devices() -> NifResult<(Atom, Vec<String>)> {
 }
 
 #[rustler::nif]
-fn get_device(name: &str) -> NifResult<(Atom, NifDevice)> {
+pub fn get_device(name: &str) -> NifResult<(Atom, NifDevice)> {
     let iname = parse_iname(name)?;
     let device = to_term_error(Device::get(&iname, BACKEND))?;
 
@@ -108,7 +108,7 @@ fn get_device(name: &str) -> NifResult<(Atom, NifDevice)> {
 }
 
 #[rustler::nif]
-fn set_device(config: NifDeviceConfig, name: &str) -> NifResult<Atom> {
+pub fn set_device(config: NifDeviceConfig, name: &str) -> NifResult<Atom> {
     let iname = parse_iname(name)?;
     let device: DeviceUpdate = config.try_into()?;
 
@@ -118,7 +118,7 @@ fn set_device(config: NifDeviceConfig, name: &str) -> NifResult<Atom> {
 }
 
 #[rustler::nif]
-fn delete_device(name: &str) -> NifResult<Atom> {
+pub fn delete_device(name: &str) -> NifResult<Atom> {
     let iname = parse_iname(name)?;
     let device = to_term_error(Device::get(&iname, BACKEND))?;
 
@@ -128,7 +128,7 @@ fn delete_device(name: &str) -> NifResult<Atom> {
 }
 
 #[rustler::nif]
-fn remove_peer(name: &str, public_key: &str) -> NifResult<Atom> {
+pub fn remove_peer(name: &str, public_key: &str) -> NifResult<Atom> {
     let iname = parse_iname(name)?;
     let key = key::from_base64(public_key)?;
     let device = DeviceUpdate::new().remove_peer_by_key(&key);
@@ -139,7 +139,7 @@ fn remove_peer(name: &str, public_key: &str) -> NifResult<Atom> {
 }
 
 #[rustler::nif]
-fn add_peer(name: &str, peer: NifPeerConfig) -> NifResult<Atom> {
+pub fn add_peer(name: &str, peer: NifPeerConfig) -> NifResult<Atom> {
     let iname = parse_iname(name)?;
     let device = DeviceUpdate::new().add_peer(peer.try_into()?);
 

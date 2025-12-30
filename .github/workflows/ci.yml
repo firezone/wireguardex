@@ -13,36 +13,37 @@ on:
 
 jobs:
   static-analysis:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     env:
       MIX_ENV: dev
       WIREGUARDNIF_BUILD: true
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
         with:
-          python-version: '3.9'
-      - uses: erlef/setup-beam@v1
+          python-version: "3.9"
+      - uses: erlef/setup-beam@923b52e23a738f55b8bcf966af7a1244f292dff0 # v1.18.2
         with:
-          otp-version: 26
-          elixir-version: 1.15
-      - uses: actions-rs/toolchain@v1
+          otp-version: 28
+          elixir-version: "1.19.4"
+          version-type: strict
+      - uses: actions-rs/toolchain@568dc894a7f9e32ffd9bb7d7a6cebb784cdaa2b0 # v1.0.7
         with:
           toolchain: stable
           components: clippy, rustfmt
-      - uses: actions/cache@v2
+      - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         name: Setup Elixir cache
         with:
           path: |
             deps
             _build
-          key: ${{ runner.os }}-mix-otp-25-${{ hashFiles('**/mix.lock') }}
-      - uses: actions/cache@v2
+          key: ${{ runner.os }}-mix-otp-28-${{ hashFiles('**/mix.lock') }}
+      - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         name: Setup Python cache
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-      - uses: actions/cache@v2
+      - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         name: Setup Rust cache
         with:
           path: |
@@ -63,37 +64,42 @@ jobs:
     env:
       MIX_ENV: test
       WIREGUARDNIF_BUILD: true
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     name: "[${{matrix.otp}}/${{matrix.elixir}}] Tests on wireguard_nif [OTP/Elixir]"
     strategy:
       fail-fast: false
       matrix:
-        otp: [22, 23, 24, 25, 26]
-        elixir: [1.13, 1.14, 1.15]
-        exclude:
-          - otp: 26
-            elixir: 1.13
-          - otp: 22
-            elixir: 1.14
-          - otp: 22
-            elixir: 1.15
-          - otp: 23
-            elixir: 1.15
+        include:
+          - otp: "25"
+            elixir: "1.15.8"
+          - otp: "26"
+            elixir: "1.16.3"
+          - otp: "26"
+            elixir: "1.17.3"
+          - otp: "27"
+            elixir: "1.17.3"
+          - otp: "27"
+            elixir: "1.18.4"
+          - otp: "28"
+            elixir: "1.18.4"
+          - otp: "28"
+            elixir: "1.19.4"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
-      - uses: actions-rs/toolchain@v1
+      - uses: actions-rs/toolchain@568dc894a7f9e32ffd9bb7d7a6cebb784cdaa2b0 # v1.0.7
         with:
           toolchain: stable
-      - uses: erlef/setup-beam@v1
+      - uses: erlef/setup-beam@923b52e23a738f55b8bcf966af7a1244f292dff0 # v1.18.2
         with:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
+          version-type: strict
 
       - name: Cache hex deps
         id: mix-cache
-        uses: actions/cache@v2
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: |
             deps
@@ -111,15 +117,17 @@ jobs:
       - run: mix test
 
   draft-release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs:
       - static-analysis
       - tests
     outputs:
       tag_name: ${{ steps.release_drafter.outputs.tag_name }}
     steps:
-      - uses: release-drafter/release-drafter@v5
+      - uses: release-drafter/release-drafter@7cf306f56b79636bb76931494ccf29fc893763bd # v6.1.0
         id: release_drafter
+        with:
+          commitish: main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -142,8 +150,8 @@ jobs:
           - aarch64-apple-darwin
           - x86_64-apple-darwin
         os:
-          - ubuntu-20.04
-          - macos-11
+          - ubuntu-24.04
+          - macos-latest
         nif:
           - "2.15"
           - "2.16"
@@ -151,17 +159,17 @@ jobs:
 
         # Exclude combinations of build OSes and targets that don't make sense
         exclude:
-          - os: macos-11
+          - os: macos-latest
             target: aarch64-unknown-linux-gnu
-          - os: macos-11
+          - os: macos-latest
             target: aarch64-unknown-linux-musl
-          - os: macos-11
+          - os: macos-latest
             target: x86_64-unknown-linux-gnu
-          - os: macos-11
+          - os: macos-latest
             target: x86_64-unknown-linux-musl
-          - os: ubuntu-20.04
+          - os: ubuntu-24.04
             target: aarch64-apple-darwin
-          - os: ubuntu-20.04
+          - os: ubuntu-24.04
             target: x86_64-apple-darwin
 
     env:
@@ -169,10 +177,10 @@ jobs:
       RUSTLER_NIF_VERSION: ${{ matrix.nif }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Install Rust
-        uses: actions-rs/toolchain@v1
+        uses: actions-rs/toolchain@568dc894a7f9e32ffd9bb7d7a6cebb784cdaa2b0 # v1.0.7
         with:
           toolchain: stable
           target: ${{ matrix.target }}
@@ -234,17 +242,17 @@ jobs:
 
           LIB_FINAL_PATH="${NIF_DIRECTORY}/${LIB_FINAL_NAME}.tar.gz"
 
-          echo ::set-output name=LIB_FINAL_PATH::${LIB_FINAL_PATH}
-          echo ::set-output name=LIB_FINAL_NAME::${LIB_FINAL_NAME}.tar.gz
+          echo "LIB_FINAL_PATH=${LIB_FINAL_PATH}" >> $GITHUB_OUTPUT
+          echo "LIB_FINAL_NAME=${LIB_FINAL_NAME}.tar.gz" >> $GITHUB_OUTPUT
 
       - name: Upload release
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         with:
           name: ${{ steps.rename.outputs.LIB_FINAL_NAME }}
           path: ${{ steps.rename.outputs.LIB_FINAL_PATH }}
 
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@c95fe1489396fe8a9eb87c0abf8aa5b2ef267fda # v2.2.1
         with:
           tag_name: ${{ needs.draft-release.outputs.tag_name }}
           draft: true

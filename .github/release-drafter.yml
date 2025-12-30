@@ -11,7 +11,7 @@ categories:
       - "bugfix"
       - "bug"
   - title: "🧰 Maintenance"
-    label:
+    labels:
       - "chore"
       - "dependencies"
   - title: "📝 Documentation"
