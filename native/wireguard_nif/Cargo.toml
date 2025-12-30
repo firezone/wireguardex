@@ -1,6 +1,6 @@
 [package]
 name = "wireguard_nif"
-version = "0.4.0"
+version = "0.5.0"
 authors = ["Jamil Bou Kheir <jamil@firezone.dev>"]
 edition = "2018"
 
