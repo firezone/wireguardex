@@ -27,6 +27,3 @@ wireguard_nif-*.tar
 
 # Compiled artifacts from rustler
 /priv/
-
-# Checksum files for precompiled NIFs
-checksum-*.exs
