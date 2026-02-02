@@ -26,7 +26,6 @@ jobs:
         with:
           otp-version: 28
           elixir-version: "1.19.4"
-          version-type: strict
       - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # v1.0.7
         with:
           toolchain: stable
@@ -95,7 +94,6 @@ jobs:
         with:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
-          version-type: strict
 
       - name: Cache hex deps
         id: mix-cache
