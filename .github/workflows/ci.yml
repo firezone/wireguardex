@@ -14,6 +14,8 @@ on:
 jobs:
   static-analysis:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     env:
       MIX_ENV: dev
       WIREGUARDNIF_BUILD: true
@@ -64,6 +66,8 @@ jobs:
       MIX_ENV: test
       WIREGUARDNIF_BUILD: true
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     name: "[${{matrix.otp}}/${{matrix.elixir}}] Tests on wireguard_nif [OTP/Elixir]"
     strategy:
       fail-fast: false
