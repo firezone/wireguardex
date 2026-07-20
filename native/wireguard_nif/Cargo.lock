@@ -235,9 +235,9 @@ dependencies = [
 
 [[package]]
 name = "netlink-request"
-version = "1.7.1"
+version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3d83636acdf5aba609ff27a66f6a235f1bcfafe20ccdaad6a5bf9d7dfa64a811"
+checksum = "be5b6ba92694217becd88bbd0a593c72055b3ff57ee2f814caad887e8d4b705a"
 dependencies = [
  "netlink-packet-core",
  "netlink-packet-generic",
@@ -471,9 +471,9 @@ checksum = "f0805222e57f7521d6a62e36fa9163bc891acd422f971defe97d64e70d0a4fe5"
 
 [[package]]
 name = "wireguard-control"
-version = "1.7.1"
+version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1a1ff6cde8cce93098564c1020e59da217c87e37b9f1bac3f539a6261a9af128"
+checksum = "46b59ffceb3d846b896f3e2e0602853ef8a0a0377c3ac367799311b14f106549"
 dependencies = [
  "base64",
  "hex",
