@@ -10,8 +10,6 @@ Wireguardex is an Elixir library for configuring [WireGuard®](https://www.wireg
 
 It is exposed as a native library via NIFs implemented in [Rust](https://rust-lang.org) using the [rustler](https://crates.io/crates/rustler) and [wireguard-control](https://docs.rs/wireguard-control/latest/wireguard_control/) crates.
 
-Used by [Firezone](https://github.com/firezone/firezone) to manage WireGuard interfaces in Elixir.
-
 ## Getting started
 
 Add `wireguardex` to your dependencies:
