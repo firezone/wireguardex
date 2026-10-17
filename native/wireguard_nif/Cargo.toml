@@ -11,4 +11,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 rustler = "0.38"
-wireguard-control = "1.7.1"
+wireguard-control = "2.0.0"
