@@ -10,5 +10,5 @@ path = "src/lib.rs"
 crate-type = ["cdylib"]
 
 [dependencies]
-rustler = "0.38"
+rustler = "0.39"
 wireguard-control = "1.7.1"
